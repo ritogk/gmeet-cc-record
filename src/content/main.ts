@@ -8,14 +8,16 @@ export const main = async (): Promise<void> => {
   console.log("start: application")
 
   const ccLog = new CcLog()
-  ccLog.addCcLog({
-    date: 123,
-    speeches: [
-      { name: "1", speach: "aiueo" },
-      { name: "2", speach: "kakikukeko" },
-    ],
-  })
-  ccLog.saveCcLogs()
+  await ccLog.loadCcLogs()
+  console.log(ccLog.getCcLogs())
+  // ccLog.addCcLog({
+  //   date: 123,
+  //   speeches: [
+  //     { name: "1", speach: "aiueo" },
+  //     { name: "2", speach: "kakikukeko" },
+  //   ],
+  // })
+  // ccLog.saveCcLogs()
 
   /**
    * 字幕変更検知後のコールバック関数
@@ -41,6 +43,6 @@ document.addEventListener("runScript", (e) => {
   main()
 })
 
-// // script呼び出し用イベント
-const event = new Event("runScript", { bubbles: true })
-document.dispatchEvent(event)
+// // // script呼び出し用イベント
+// const event = new Event("runScript", { bubbles: true })
+// document.dispatchEvent(event)

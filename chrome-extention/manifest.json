@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "author": "ritogk",
-  "name": "Visual Perception of Google Meet",
-  "description": "GoogleMeetの字幕をもっと認知しやすくするための拡張機能です。",
+  "name": "Google Meet CC Record",
+  "description": "GoogleMeetの字幕を記録する拡張機能",
   "version": "1.0.0",
   "icons": {
     "16": "images/icon-16.png",

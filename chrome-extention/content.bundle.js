@@ -145,14 +145,16 @@ __webpack_require__.r(__webpack_exports__);
 const main = async () => {
     console.log("start: application");
     const ccLog = new _core_ccLog__WEBPACK_IMPORTED_MODULE_1__.CcLog();
-    ccLog.addCcLog({
-        date: 123,
-        speeches: [
-            { name: "1", speach: "aiueo" },
-            { name: "2", speach: "kakikukeko" },
-        ],
-    });
-    ccLog.saveCcLogs();
+    await ccLog.loadCcLogs();
+    console.log(ccLog.getCcLogs());
+    // ccLog.addCcLog({
+    //   date: 123,
+    //   speeches: [
+    //     { name: "1", speach: "aiueo" },
+    //     { name: "2", speach: "kakikukeko" },
+    //   ],
+    // })
+    // ccLog.saveCcLogs()
     /**
      * 字幕変更検知後のコールバック関数
      * @param name
@@ -171,9 +173,9 @@ const main = async () => {
 document.addEventListener("runScript", (e) => {
     main();
 });
-// // script呼び出し用イベント
-const event = new Event("runScript", { bubbles: true });
-document.dispatchEvent(event);
+// // // script呼び出し用イベント
+// const event = new Event("runScript", { bubbles: true })
+// document.dispatchEvent(event)
 
 
 /***/ }),
@@ -200,6 +202,9 @@ class CcLog {
         };
         this.getCcLog = (date) => {
             return this.logs.ccLogs.find((x) => x.date === date);
+        };
+        this.getCcLogs = () => {
+            return this.logs.ccLogs;
         };
         this.setCcLogs = (ccLogs) => {
             this.logs.ccLogs = ccLogs;

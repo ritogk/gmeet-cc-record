@@ -1,8 +1,9 @@
 import { getStorage, addListener, setStorage } from "@/core/googleStorage"
 export interface CcLogInterface {
   loadCcLogs(): Promise<void>
-  getCcLog(date: number): CcLogObjectInterface | undefined
   setCcLogs(ccLogs: CcLogObjectInterface[]): void
+  getCcLogs(): CcLogObjectInterface[]
+  getCcLog(date: number): CcLogObjectInterface | undefined
   addCcLog(ccLog: CcLogObjectInterface): void
   observeGoogleStorage(): void
 }
@@ -26,6 +27,10 @@ export class CcLog implements CcLogInterface {
 
   getCcLog = (date: number): CcLogObjectInterface | undefined => {
     return this.logs.ccLogs.find((x) => x.date === date)
+  }
+
+  getCcLogs = (): CcLogObjectInterface[] => {
+    return this.logs.ccLogs
   }
 
   setCcLogs = (ccLogs: CcLogObjectInterface[]): void => {
