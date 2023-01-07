@@ -128,6 +128,126 @@ class CcAreaElement {
 
 /***/ }),
 
+/***/ "./src/content/elements/controlAreaElement.ts":
+/*!****************************************************!*\
+  !*** ./src/content/elements/controlAreaElement.ts ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "ControlAreaElement": () => (/* binding */ ControlAreaElement)
+/* harmony export */ });
+/* harmony import */ var _content_core_selector__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/content/core/selector */ "./src/content/core/selector.ts");
+
+/**
+ * コントロールエリアElementに関するクラス
+ */
+class ControlAreaElement {
+    constructor() {
+        this.getElement = () => {
+            return document.querySelector(_content_core_selector__WEBPACK_IMPORTED_MODULE_0__.selector.controlArea);
+        };
+        this.getCcBottomElement = () => {
+            const element = this.getElement();
+            if (element === null)
+                return null;
+            return element.querySelector("div.Tmb7Fd > div > div.juFBl");
+        };
+    }
+}
+
+
+/***/ }),
+
+/***/ "./src/content/elements/switchingButtonElement.ts":
+/*!********************************************************!*\
+  !*** ./src/content/elements/switchingButtonElement.ts ***!
+  \********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "SwitchingButtonElement": () => (/* binding */ SwitchingButtonElement)
+/* harmony export */ });
+/* harmony import */ var _content_elements_controlAreaElement__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/content/elements/controlAreaElement */ "./src/content/elements/controlAreaElement.ts");
+
+/**
+ * システムのスイッチングボタンに関するクラス
+ */
+class SwitchingButtonElement {
+    constructor(callback) {
+        this.drawed = false;
+        this.mouseOver = false;
+        this.clicked = false;
+        this.createElement = () => {
+            const element = document.createElement("div");
+            element.id = SwitchingButtonElement.ELEMENT_ID;
+            element.addEventListener("mouseover", this.callbackFuncMouseOver);
+            element.addEventListener("mouseleave", this.callbackFuncMouseLeave);
+            element.addEventListener("click", this.callbackFuncClick);
+            const ccButtonElement = new _content_elements_controlAreaElement__WEBPACK_IMPORTED_MODULE_0__.ControlAreaElement().getCcBottomElement();
+            if (ccButtonElement !== null && ccButtonElement.parentNode != null) {
+                ccButtonElement.parentNode.insertBefore(element, ccButtonElement.nextElementSibling);
+                this.changeStyle();
+                this.drawed = true;
+            }
+        };
+        this.deleteElement = () => {
+            var _a;
+            (_a = document.getElementById(SwitchingButtonElement.ELEMENT_ID)) === null || _a === void 0 ? void 0 : _a.remove();
+            this.drawed = false;
+            this.mouseOver = false;
+            this.clicked = false;
+        };
+        this.getElement = () => {
+            return document.getElementById(SwitchingButtonElement.ELEMENT_ID);
+        };
+        this.callbackFuncMouseOver = (e) => {
+            this.mouseOver = true;
+            this.changeStyle();
+        };
+        this.callbackFuncMouseLeave = (e) => {
+            this.mouseOver = false;
+            this.changeStyle();
+        };
+        this.callbackFuncClick = (e) => {
+            this.clicked = !this.clicked;
+            this.changeStyle();
+            this.clickCallback(this.clicked);
+        };
+        this.changeStyle = () => {
+            const element = this.getElement();
+            if (element === null)
+                return;
+            element.style.width = "40px";
+            element.style.height = "40px";
+            element.style.backgroundColor = "rgb(60, 64, 67)";
+            element.style.borderRadius = "20px";
+            element.style.paddingTop = "12px";
+            element.style.paddingBottom = "12px";
+            element.style.display = "inline-block";
+            element.style.boxSizing = "border-box";
+            element.style.filter = "brightness(1)";
+            element.innerText = "ON";
+            element.style.color = "#FFF";
+            if (this.mouseOver) {
+                element.style.filter = "brightness(1.15)";
+            }
+            if (this.clicked) {
+                element.style.color = "#000";
+                element.innerText = "OFF";
+                element.style.backgroundColor = "rgb(138,180,248)";
+            }
+        };
+        this.clickCallback = callback;
+    }
+}
+SwitchingButtonElement.ELEMENT_ID = "controlButton";
+
+
+/***/ }),
+
 /***/ "./src/content/main.ts":
 /*!*****************************!*\
   !*** ./src/content/main.ts ***!
@@ -138,27 +258,49 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "main": () => (/* binding */ main)
 /* harmony export */ });
-/* harmony import */ var _content_core_ccOveserver__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/content/core/ccOveserver */ "./src/content/core/ccOveserver.ts");
-/* harmony import */ var _core_ccLog__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/core/ccLog */ "./src/core/ccLog.ts");
+/* harmony import */ var _content_elements_switchingButtonElement__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/content/elements/switchingButtonElement */ "./src/content/elements/switchingButtonElement.ts");
+/* harmony import */ var _content_core_ccOveserver__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/content/core/ccOveserver */ "./src/content/core/ccOveserver.ts");
+/* harmony import */ var _core_ccLog__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/core/ccLog */ "./src/core/ccLog.ts");
+
 
 
 const main = async () => {
     console.log("start: application");
     const callbackFuncChangeCcLogs = (ccLogs) => {
         console.log("mutate: ccLogs");
-        debugger;
     };
-    const ccLog = new _core_ccLog__WEBPACK_IMPORTED_MODULE_1__.CcLog(callbackFuncChangeCcLogs);
+    const ccLog = new _core_ccLog__WEBPACK_IMPORTED_MODULE_2__.CcLog(callbackFuncChangeCcLogs);
     await ccLog.loadCcLogs();
-    console.log(ccLog.getCcLogs());
-    ccLog.addCcLog({
-        date: 123,
-        speeches: [
-            { name: "1", speach: "aiueo" },
-            { name: "2", speach: "kakikukeko" },
-        ],
-    });
-    ccLog.saveCcLogs();
+    const log = {
+        ccLog: {
+            date: 0,
+            speeches: [],
+        },
+        recordedAt: null,
+        recorded: false,
+    };
+    /**
+     * コントロールボタン押下後のコールバック関数
+     * @param clicked
+     */
+    const callbackFuncClick = (clicked) => {
+        console.log("click: controlButton");
+        if (clicked) {
+            ccOveserver.run();
+            console.log("start: observer");
+            log.ccLog.date = new Date().getTime();
+            log.recordedAt = new Date().getTime();
+        }
+        else {
+            ccOveserver.stop();
+            console.log("stop: observer");
+            log.recordedAt = null;
+            log.ccLog.date = 0;
+            log.ccLog.speeches = [];
+        }
+    };
+    const controlButtonElement = new _content_elements_switchingButtonElement__WEBPACK_IMPORTED_MODULE_0__.SwitchingButtonElement(callbackFuncClick);
+    controlButtonElement.createElement();
     /**
      * 字幕変更検知後のコールバック関数
      * @param name
@@ -170,8 +312,16 @@ const main = async () => {
         console.log(`name: ${name}`);
         console.log(`imagePath: ${imagePath}`);
         console.log(`speach: ${speach}`);
+        if (log.recordedAt !== null) {
+            log.ccLog.date = new Date().getTime();
+            log.ccLog.speeches.push({
+                date: new Date().getTime(),
+                name: name,
+                speach: speach,
+            });
+        }
     };
-    const ccOveserver = new _content_core_ccOveserver__WEBPACK_IMPORTED_MODULE_0__.CcOveserver(callbackFuncObserver);
+    const ccOveserver = new _content_core_ccOveserver__WEBPACK_IMPORTED_MODULE_1__.CcOveserver(callbackFuncObserver);
 };
 // 動作確認用の入口
 document.addEventListener("runScript", (e) => {

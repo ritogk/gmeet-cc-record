@@ -9,20 +9,40 @@ export const main = async (): Promise<void> => {
 
   const callbackFuncChangeCcLogs = (ccLogs: CcLogObjectInterface[]): void => {
     console.log("mutate: ccLogs")
-    debugger
   }
 
   const ccLog = new CcLog(callbackFuncChangeCcLogs)
   await ccLog.loadCcLogs()
-  console.log(ccLog.getCcLogs())
-  ccLog.addCcLog({
-    date: 123,
-    speeches: [
-      { name: "1", speach: "aiueo" },
-      { name: "2", speach: "kakikukeko" },
-    ],
-  })
-  ccLog.saveCcLogs()
+  const log = {
+    ccLog: <CcLogObjectInterface>{
+      date: 0,
+      speeches: [],
+    },
+    recordedAt: <number | null>null,
+    recorded: false,
+  }
+
+  /**
+   * コントロールボタン押下後のコールバック関数
+   * @param clicked
+   */
+  const callbackFuncClick = (clicked: boolean) => {
+    console.log("click: controlButton")
+    if (clicked) {
+      ccOveserver.run()
+      console.log("start: observer")
+      log.ccLog.date = new Date().getTime()
+      log.recordedAt = new Date().getTime()
+    } else {
+      ccOveserver.stop()
+      console.log("stop: observer")
+      log.recordedAt = null
+      log.ccLog.date = 0
+      log.ccLog.speeches = []
+    }
+  }
+  const controlButtonElement = new SwitchingButtonElement(callbackFuncClick)
+  controlButtonElement.createElement()
 
   /**
    * 字幕変更検知後のコールバック関数
@@ -39,6 +59,14 @@ export const main = async (): Promise<void> => {
     console.log(`name: ${name}`)
     console.log(`imagePath: ${imagePath}`)
     console.log(`speach: ${speach}`)
+    if (log.recordedAt !== null) {
+      log.ccLog.date = new Date().getTime()
+      log.ccLog.speeches.push({
+        date: new Date().getTime(),
+        name: name,
+        speach: speach,
+      })
+    }
   }
   const ccOveserver = new CcOveserver(callbackFuncObserver)
 }

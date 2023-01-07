@@ -15,7 +15,7 @@ export interface LogObjectInterface {
 
 export interface CcLogObjectInterface {
   date: number
-  speeches: { name: string; speach: string }[]
+  speeches: { date: number; name: string; speach: string }[]
 }
 
 /**
