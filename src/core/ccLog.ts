@@ -5,6 +5,7 @@ export interface CcLogInterface {
   getCcLogs(): CcLogObjectInterface[]
   getCcLog(date: number): CcLogObjectInterface | undefined
   addCcLog(ccLog: CcLogObjectInterface): void
+  deleteCcLog(date: number): void
   observeGoogleStorage(): void
 }
 
@@ -45,6 +46,11 @@ export class CcLog implements CcLogInterface {
 
   addCcLog = (ccLog: CcLogObjectInterface): void => {
     this.logs.ccLogs.push(ccLog)
+    this.callbackFuncChange(this.logs.ccLogs)
+  }
+
+  deleteCcLog = (date: number): void => {
+    this.logs.ccLogs = this.logs.ccLogs.filter((x) => x.date !== date)
     this.callbackFuncChange(this.logs.ccLogs)
   }
 

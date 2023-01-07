@@ -218,6 +218,10 @@ class CcLog {
             this.logs.ccLogs.push(ccLog);
             this.callbackFuncChange(this.logs.ccLogs);
         };
+        this.deleteCcLog = (date) => {
+            this.logs.ccLogs = this.logs.ccLogs.filter((x) => x.date !== date);
+            this.callbackFuncChange(this.logs.ccLogs);
+        };
         this.saveCcLogs = () => {
             (0,_core_googleStorage__WEBPACK_IMPORTED_MODULE_0__.setStorage)("ccLogs", this.logs.ccLogs);
         };
