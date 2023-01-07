@@ -1,57 +1,21 @@
 import { Config, ConfigObjectInterface, DisplayOriginalCc } from "@/core/config"
-import { UsersAreaElement } from "@/content/elements/UsersAreaElement"
 import { SwitchingButtonElement } from "@/content/elements/switchingButtonElement"
 import { CcAreaElement } from "@/content/elements/ccAreaElement"
 import { CcOveserver } from "@/content/core/ccOveserver"
+import { CcLog } from "@/core/ccLog"
 
 export const main = async (): Promise<void> => {
   console.log("start: application")
 
-  const usersAreaElement = new UsersAreaElement()
-  const ccAreaElement = new CcAreaElement()
-
-  /**
-   * 設定ファイル変更時のコールバック関数
-   * @param config
-   */
-  const callbackFuncChangeConfig = (config: ConfigObjectInterface) => {
-    console.log(JSON.stringify(config))
-    // 字幕の透明度
-    usersAreaElement.setUserCcOpacityRate(config.opacityRate)
-
-    // 字幕の表示非表示制御
-    if (config.displayOriginalCc == DisplayOriginalCc.OK) {
-      ccAreaElement.showElement()
-    } else {
-      ccAreaElement.hideElement()
-    }
-  }
-  const config = new Config(callbackFuncChangeConfig)
-  await config.loadConfig()
-  console.log(`load config: ${JSON.stringify(config.getConfig())}`)
-  config.observeGoogleStorage()
-  /**
-   * コントロールボタン押下後のコールバック関数
-   * @param clicked
-   */
-  const callbackFuncClick = (clicked: boolean) => {
-    console.log("click: controlButton")
-    if (clicked) {
-      ccOveserver.run()
-      console.log("start: observer")
-      usersAreaElement.runInterval()
-      console.log("run: interval")
-    } else {
-      ccOveserver.stop()
-      console.log("stop: observer")
-      usersAreaElement.stopInterval()
-      console.log("stop: interval")
-      usersAreaElement.deleteUserCcElements()
-      console.log("delete: cc elements")
-    }
-  }
-  const controlButtonElement = new SwitchingButtonElement(callbackFuncClick)
-  controlButtonElement.createElement()
+  const ccLog = new CcLog()
+  ccLog.addCcLog({
+    date: 123,
+    speeches: [
+      { name: "1", speach: "aiueo" },
+      { name: "2", speach: "kakikukeko" },
+    ],
+  })
+  ccLog.saveCcLogs()
 
   /**
    * 字幕変更検知後のコールバック関数
@@ -68,12 +32,6 @@ export const main = async (): Promise<void> => {
     console.log(`name: ${name}`)
     console.log(`imagePath: ${imagePath}`)
     console.log(`speach: ${speach}`)
-
-    if (!usersAreaElement.findUserCcElement(name)) {
-      usersAreaElement.appendUserCcElement(name, speach)
-    } else {
-      usersAreaElement.updateUserCcElement(name, speach)
-    }
   }
   const ccOveserver = new CcOveserver(callbackFuncObserver)
 }
@@ -84,5 +42,5 @@ document.addEventListener("runScript", (e) => {
 })
 
 // // script呼び出し用イベント
-// const event = new Event("runScript", { bubbles: true })
-// document.dispatchEvent(event)
+const event = new Event("runScript", { bubbles: true })
+document.dispatchEvent(event)

@@ -6,6 +6,7 @@ module.exports = {
   // メインとなるJavaScriptファイル（エントリーポイント）
   entry: {
     content: "./src/content/run.ts",
+    main: "./src/content/main.ts",
     popup: "/src/popup/run.ts",
   },
   devtool: "cheap-module-source-map",

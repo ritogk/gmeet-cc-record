@@ -128,56 +128,6 @@ class CcAreaElement {
 
 /***/ }),
 
-/***/ "./src/content/main.ts":
-/*!*****************************!*\
-  !*** ./src/content/main.ts ***!
-  \*****************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "main": () => (/* binding */ main)
-/* harmony export */ });
-/* harmony import */ var _content_core_ccOveserver__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/content/core/ccOveserver */ "./src/content/core/ccOveserver.ts");
-/* harmony import */ var _core_ccLog__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/core/ccLog */ "./src/core/ccLog.ts");
-
-
-const main = async () => {
-    console.log("start: application");
-    const ccLog = new _core_ccLog__WEBPACK_IMPORTED_MODULE_1__.CcLog();
-    ccLog.addCcLog({
-        date: 123,
-        speeches: [
-            { name: "1", speach: "aiueo" },
-            { name: "2", speach: "kakikukeko" },
-        ],
-    });
-    ccLog.saveCcLogs();
-    /**
-     * 字幕変更検知後のコールバック関数
-     * @param name
-     * @param imagePath
-     * @param speach
-     */
-    const callbackFuncObserver = (name, imagePath, speach) => {
-        console.log("mutate: cc");
-        console.log(`name: ${name}`);
-        console.log(`imagePath: ${imagePath}`);
-        console.log(`speach: ${speach}`);
-    };
-    const ccOveserver = new _content_core_ccOveserver__WEBPACK_IMPORTED_MODULE_0__.CcOveserver(callbackFuncObserver);
-};
-// 動作確認用の入口
-document.addEventListener("runScript", (e) => {
-    main();
-});
-// // script呼び出し用イベント
-const event = new Event("runScript", { bubbles: true });
-document.dispatchEvent(event);
-
-
-/***/ }),
-
 /***/ "./src/core/ccLog.ts":
 /*!***************************!*\
   !*** ./src/core/ccLog.ts ***!
@@ -327,28 +277,52 @@ const addListener = (callbackFunc) => {
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-/*!****************************!*\
-  !*** ./src/content/run.ts ***!
-  \****************************/
+/*!*****************************!*\
+  !*** ./src/content/main.ts ***!
+  \*****************************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _content_elements_ccAreaElement__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/content/elements/ccAreaElement */ "./src/content/elements/ccAreaElement.ts");
-/* harmony import */ var _content_main__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/content/main */ "./src/content/main.ts");
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "main": () => (/* binding */ main)
+/* harmony export */ });
+/* harmony import */ var _content_core_ccOveserver__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/content/core/ccOveserver */ "./src/content/core/ccOveserver.ts");
+/* harmony import */ var _core_ccLog__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/core/ccLog */ "./src/core/ccLog.ts");
 
 
-const run = () => {
-    const ccAreaElement = new _content_elements_ccAreaElement__WEBPACK_IMPORTED_MODULE_0__.CcAreaElement();
-    const jsLoaded = () => {
-        if (ccAreaElement.getElement()) {
-            clearInterval(jsInitCheckTimer);
-            (0,_content_main__WEBPACK_IMPORTED_MODULE_1__.main)();
-        }
+const main = async () => {
+    console.log("start: application");
+    const ccLog = new _core_ccLog__WEBPACK_IMPORTED_MODULE_1__.CcLog();
+    ccLog.addCcLog({
+        date: 123,
+        speeches: [
+            { name: "1", speach: "aiueo" },
+            { name: "2", speach: "kakikukeko" },
+        ],
+    });
+    ccLog.saveCcLogs();
+    /**
+     * 字幕変更検知後のコールバック関数
+     * @param name
+     * @param imagePath
+     * @param speach
+     */
+    const callbackFuncObserver = (name, imagePath, speach) => {
+        console.log("mutate: cc");
+        console.log(`name: ${name}`);
+        console.log(`imagePath: ${imagePath}`);
+        console.log(`speach: ${speach}`);
     };
-    const jsInitCheckTimer = setInterval(jsLoaded, 1000);
+    const ccOveserver = new _content_core_ccOveserver__WEBPACK_IMPORTED_MODULE_0__.CcOveserver(callbackFuncObserver);
 };
-window.addEventListener("load", run, false);
+// 動作確認用の入口
+document.addEventListener("runScript", (e) => {
+    main();
+});
+// // script呼び出し用イベント
+const event = new Event("runScript", { bubbles: true });
+document.dispatchEvent(event);
 
 })();
 
 /******/ })()
 ;
-//# sourceMappingURL=content.bundle.js.map
+//# sourceMappingURL=main.bundle.js.map

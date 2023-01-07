@@ -22,5 +22,5 @@
     "default_popup": "popup.html"
   },
   "host_permissions": ["https://meet.google.com/*"],
-  "permissions": ["storage", "activeTab"]
+  "permissions": ["activeTab", "storage", "unlimitedStorage"]
 }
