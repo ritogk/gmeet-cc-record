@@ -2,22 +2,27 @@ import { Config, ConfigObjectInterface, DisplayOriginalCc } from "@/core/config"
 import { SwitchingButtonElement } from "@/content/elements/switchingButtonElement"
 import { CcAreaElement } from "@/content/elements/ccAreaElement"
 import { CcOveserver } from "@/content/core/ccOveserver"
-import { CcLog } from "@/core/ccLog"
+import { CcLog, CcLogObjectInterface } from "@/core/ccLog"
 
 export const main = async (): Promise<void> => {
   console.log("start: application")
 
-  const ccLog = new CcLog()
+  const callbackFuncChangeCcLogs = (ccLogs: CcLogObjectInterface[]): void => {
+    console.log("mutate: ccLogs")
+    debugger
+  }
+
+  const ccLog = new CcLog(callbackFuncChangeCcLogs)
   await ccLog.loadCcLogs()
   console.log(ccLog.getCcLogs())
-  // ccLog.addCcLog({
-  //   date: 123,
-  //   speeches: [
-  //     { name: "1", speach: "aiueo" },
-  //     { name: "2", speach: "kakikukeko" },
-  //   ],
-  // })
-  // ccLog.saveCcLogs()
+  ccLog.addCcLog({
+    date: 123,
+    speeches: [
+      { name: "1", speach: "aiueo" },
+      { name: "2", speach: "kakikukeko" },
+    ],
+  })
+  ccLog.saveCcLogs()
 
   /**
    * 字幕変更検知後のコールバック関数

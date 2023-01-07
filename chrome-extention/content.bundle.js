@@ -144,17 +144,21 @@ __webpack_require__.r(__webpack_exports__);
 
 const main = async () => {
     console.log("start: application");
-    const ccLog = new _core_ccLog__WEBPACK_IMPORTED_MODULE_1__.CcLog();
+    const callbackFuncChangeCcLogs = (ccLogs) => {
+        console.log("mutate: ccLogs");
+        debugger;
+    };
+    const ccLog = new _core_ccLog__WEBPACK_IMPORTED_MODULE_1__.CcLog(callbackFuncChangeCcLogs);
     await ccLog.loadCcLogs();
     console.log(ccLog.getCcLogs());
-    // ccLog.addCcLog({
-    //   date: 123,
-    //   speeches: [
-    //     { name: "1", speach: "aiueo" },
-    //     { name: "2", speach: "kakikukeko" },
-    //   ],
-    // })
-    // ccLog.saveCcLogs()
+    ccLog.addCcLog({
+        date: 123,
+        speeches: [
+            { name: "1", speach: "aiueo" },
+            { name: "2", speach: "kakikukeko" },
+        ],
+    });
+    ccLog.saveCcLogs();
     /**
      * 字幕変更検知後のコールバック関数
      * @param name
@@ -196,7 +200,7 @@ __webpack_require__.r(__webpack_exports__);
  * ポップアップ内で入力した設定情報
  */
 class CcLog {
-    constructor() {
+    constructor(callbackFunc) {
         this.logs = {
             ccLogs: [],
         };
@@ -208,16 +212,18 @@ class CcLog {
         };
         this.setCcLogs = (ccLogs) => {
             this.logs.ccLogs = ccLogs;
+            this.callbackFuncChange(this.logs.ccLogs);
         };
         this.addCcLog = (ccLog) => {
             this.logs.ccLogs.push(ccLog);
+            this.callbackFuncChange(this.logs.ccLogs);
         };
         this.saveCcLogs = () => {
             (0,_core_googleStorage__WEBPACK_IMPORTED_MODULE_0__.setStorage)("ccLogs", this.logs.ccLogs);
         };
         this.loadCcLogs = async () => {
             var _a;
-            this.logs.ccLogs = (_a = (await (0,_core_googleStorage__WEBPACK_IMPORTED_MODULE_0__.getStorage)("ccLogs"))) !== null && _a !== void 0 ? _a : [];
+            this.setCcLogs((_a = (await (0,_core_googleStorage__WEBPACK_IMPORTED_MODULE_0__.getStorage)("ccLogs"))) !== null && _a !== void 0 ? _a : []);
         };
         this.observeGoogleStorage = () => {
             (0,_core_googleStorage__WEBPACK_IMPORTED_MODULE_0__.addListener)((message) => {
@@ -229,6 +235,7 @@ class CcLog {
                 this.setCcLogs(logs.ccLogs);
             });
         };
+        this.callbackFuncChange = callbackFunc;
     }
 }
 

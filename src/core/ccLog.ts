@@ -24,6 +24,11 @@ export class CcLog implements CcLogInterface {
   private logs: LogObjectInterface = {
     ccLogs: [],
   }
+  private callbackFuncChange: (ccLogs: CcLogObjectInterface[]) => void
+
+  constructor(callbackFunc: (ccLogs: CcLogObjectInterface[]) => void) {
+    this.callbackFuncChange = callbackFunc
+  }
 
   getCcLog = (date: number): CcLogObjectInterface | undefined => {
     return this.logs.ccLogs.find((x) => x.date === date)
@@ -35,10 +40,12 @@ export class CcLog implements CcLogInterface {
 
   setCcLogs = (ccLogs: CcLogObjectInterface[]): void => {
     this.logs.ccLogs = ccLogs
+    this.callbackFuncChange(this.logs.ccLogs)
   }
 
   addCcLog = (ccLog: CcLogObjectInterface): void => {
     this.logs.ccLogs.push(ccLog)
+    this.callbackFuncChange(this.logs.ccLogs)
   }
 
   saveCcLogs = (): void => {
@@ -46,7 +53,7 @@ export class CcLog implements CcLogInterface {
   }
 
   loadCcLogs = async (): Promise<void> => {
-    this.logs.ccLogs = (await getStorage("ccLogs")) ?? []
+    this.setCcLogs((await getStorage("ccLogs")) ?? [])
   }
 
   observeGoogleStorage = (): void => {
