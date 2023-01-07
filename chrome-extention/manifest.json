@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "author": "ritogk",
+  "name": "Visual Perception of Google Meet",
+  "description": "GoogleMeetの字幕をもっと認知しやすくするための拡張機能です。",
+  "version": "1.0.0",
+  "icons": {
+    "16": "images/icon-16.png",
+    "32": "images/icon-32.png",
+    "48": "images/icon-48.png",
+    "128": "images/icon-128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://meet.google.com/*"],
+      "js": ["content.bundle.js"],
+      "run_at": "document_end",
+      "all_frames": true
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "host_permissions": ["https://meet.google.com/*"],
+  "permissions": ["storage", "activeTab"]
+}
