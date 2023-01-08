@@ -2493,15 +2493,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _content_elements_switchingButtonElement__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/content/elements/switchingButtonElement */ "./src/content/elements/switchingButtonElement.ts");
 /* harmony import */ var _content_core_ccOveserver__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/content/core/ccOveserver */ "./src/content/core/ccOveserver.ts");
 /* harmony import */ var _core_ccLog__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/core/ccLog */ "./src/core/ccLog.ts");
-/* harmony import */ var diff_match_patch__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! diff-match-patch */ "./node_modules/diff-match-patch/index.js");
-/* harmony import */ var diff_match_patch__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(diff_match_patch__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _core_chromeStorage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/core/chromeStorage */ "./src/core/chromeStorage.ts");
+/* harmony import */ var diff_match_patch__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! diff-match-patch */ "./node_modules/diff-match-patch/index.js");
+/* harmony import */ var diff_match_patch__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(diff_match_patch__WEBPACK_IMPORTED_MODULE_4__);
+
 
 
 
 
 const main = async () => {
     console.log("start: application");
-    const dmp = new diff_match_patch__WEBPACK_IMPORTED_MODULE_3__.diff_match_patch();
+    const dmp = new diff_match_patch__WEBPACK_IMPORTED_MODULE_4__.diff_match_patch();
     // const allDiffs = dmp.diff_main(
     //   "A B C D E F ghijk 前回の会話と一致している文字列を調べる 一致していただく つける 全く一致していなかったらログイン 追加する。 一人で話し続ける時に記録する処理がいる直前と同じ名前だったら、文字列をくっ",
     //   "一致していただく つける 全く一致していなかったらログイン 追加する。 一人で話し続ける時に記録する処理がいる直前と同じ名前だったら、文字列をくっ つけるようにしようかな"
@@ -2519,13 +2521,13 @@ const main = async () => {
     const log = {
         logRecorded: false,
         beforeSpeach: { name: "", speach: "", recordedAt: 0 },
-        ccLog: defaultLog,
+        ccLog: JSON.parse(JSON.stringify(defaultLog)),
     };
     /**
      * コントロールボタン押下後のコールバック関数
      * @param clicked
      */
-    const callbackFuncClick = (clicked) => {
+    const callbackFuncClick = async (clicked) => {
         console.log("click: controlButton");
         if (clicked) {
             ccOveserver.run();
@@ -2538,10 +2540,18 @@ const main = async () => {
             log.ccLog.speeches.push(log.beforeSpeach);
             log.ccLog.recordedEdAt = new Date().getTime();
             log.ccLog.speeches = log.ccLog.speeches.slice(1);
-            debugger;
             // storageへの記録処理をここにいれる
+            const storage = await (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_3__.getStorage)("ccLogs");
+            if (storage === null) {
+                (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_3__.setStorage)("ccLogs", []);
+            }
+            else {
+                storage.push(log.ccLog);
+                (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_3__.setStorage)("ccLogs", storage);
+            }
             log.logRecorded = false;
-            log.ccLog = defaultLog;
+            log.ccLog = JSON.parse(JSON.stringify(defaultLog));
+            log.beforeSpeach = { name: "", speach: "", recordedAt: 0 };
         }
     };
     const controlButtonElement = new _content_elements_switchingButtonElement__WEBPACK_IMPORTED_MODULE_0__.SwitchingButtonElement(callbackFuncClick);

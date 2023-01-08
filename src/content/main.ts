@@ -1,9 +1,7 @@
-import { Config, ConfigObjectInterface, DisplayOriginalCc } from "@/core/config"
 import { SwitchingButtonElement } from "@/content/elements/switchingButtonElement"
-import { CcAreaElement } from "@/content/elements/ccAreaElement"
 import { CcOveserver } from "@/content/core/ccOveserver"
 import { CcLog, CcLogObjectInterface } from "@/core/ccLog"
-
+import { setStorage, getStorage } from "@/core/chromeStorage"
 import { diff_match_patch } from "diff-match-patch"
 
 export const main = async (): Promise<void> => {
@@ -30,14 +28,14 @@ export const main = async (): Promise<void> => {
   const log = {
     logRecorded: false,
     beforeSpeach: { name: "", speach: "", recordedAt: 0 },
-    ccLog: defaultLog,
+    ccLog: JSON.parse(JSON.stringify(defaultLog)),
   }
 
   /**
    * コントロールボタン押下後のコールバック関数
    * @param clicked
    */
-  const callbackFuncClick = (clicked: boolean) => {
+  const callbackFuncClick = async (clicked: boolean) => {
     console.log("click: controlButton")
     if (clicked) {
       ccOveserver.run()
@@ -49,10 +47,18 @@ export const main = async (): Promise<void> => {
       log.ccLog.speeches.push(log.beforeSpeach)
       log.ccLog.recordedEdAt = new Date().getTime()
       log.ccLog.speeches = log.ccLog.speeches.slice(1)
-      debugger
       // storageへの記録処理をここにいれる
+      const storage = await getStorage<CcLogObjectInterface[]>("ccLogs")
+      if (storage === null) {
+        setStorage("ccLogs", [])
+      } else {
+        storage.push(log.ccLog)
+        setStorage("ccLogs", storage)
+      }
+
       log.logRecorded = false
-      log.ccLog = defaultLog
+      log.ccLog = JSON.parse(JSON.stringify(defaultLog))
+      log.beforeSpeach = { name: "", speach: "", recordedAt: 0 }
     }
   }
   const controlButtonElement = new SwitchingButtonElement(callbackFuncClick)
