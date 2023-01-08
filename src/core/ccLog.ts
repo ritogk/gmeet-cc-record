@@ -14,8 +14,9 @@ export interface LogObjectInterface {
 }
 
 export interface CcLogObjectInterface {
-  date: number
-  speeches: { date: number; name: string; speach: string }[]
+  recordedStAt: number
+  recordedEdAt: number
+  speeches: { name: string; speach: string; recordedAt: number }[]
 }
 
 /**
@@ -31,8 +32,8 @@ export class CcLog implements CcLogInterface {
     this.callbackFuncChange = callbackFunc
   }
 
-  getCcLog = (date: number): CcLogObjectInterface | undefined => {
-    return this.logs.ccLogs.find((x) => x.date === date)
+  getCcLog = (recordedAt: number): CcLogObjectInterface | undefined => {
+    return this.logs.ccLogs.find((x) => x.recordedStAt === recordedAt)
   }
 
   getCcLogs = (): CcLogObjectInterface[] => {
@@ -49,8 +50,10 @@ export class CcLog implements CcLogInterface {
     this.callbackFuncChange(this.logs.ccLogs)
   }
 
-  deleteCcLog = (date: number): void => {
-    this.logs.ccLogs = this.logs.ccLogs.filter((x) => x.date !== date)
+  deleteCcLog = (recordedAt: number): void => {
+    this.logs.ccLogs = this.logs.ccLogs.filter(
+      (x) => x.recordedStAt !== recordedAt
+    )
     this.callbackFuncChange(this.logs.ccLogs)
   }
 

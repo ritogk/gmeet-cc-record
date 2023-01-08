@@ -268,8 +268,8 @@ class CcLog {
         this.logs = {
             ccLogs: [],
         };
-        this.getCcLog = (date) => {
-            return this.logs.ccLogs.find((x) => x.date === date);
+        this.getCcLog = (recordedAt) => {
+            return this.logs.ccLogs.find((x) => x.recordedStAt === recordedAt);
         };
         this.getCcLogs = () => {
             return this.logs.ccLogs;
@@ -282,8 +282,8 @@ class CcLog {
             this.logs.ccLogs.push(ccLog);
             this.callbackFuncChange(this.logs.ccLogs);
         };
-        this.deleteCcLog = (date) => {
-            this.logs.ccLogs = this.logs.ccLogs.filter((x) => x.date !== date);
+        this.deleteCcLog = (recordedAt) => {
+            this.logs.ccLogs = this.logs.ccLogs.filter((x) => x.recordedStAt !== recordedAt);
             this.callbackFuncChange(this.logs.ccLogs);
         };
         this.saveCcLogs = () => {
@@ -425,16 +425,15 @@ const main = async () => {
     const callbackFuncChangeCcLogs = (ccLogs) => {
         console.log("mutate: ccLogs");
     };
+    let logRecording = false;
     const ccLog = new _core_ccLog__WEBPACK_IMPORTED_MODULE_2__.CcLog(callbackFuncChangeCcLogs);
     await ccLog.loadCcLogs();
-    const log = {
-        ccLog: {
-            date: 0,
-            speeches: [],
-        },
-        recordedAt: null,
-        recorded: false,
+    const defaultLog = {
+        recordedStAt: 0,
+        recordedEdAt: 0,
+        speeches: [],
     };
+    const log = defaultLog;
     /**
      * コントロールボタン押下後のコールバック関数
      * @param clicked
@@ -444,15 +443,18 @@ const main = async () => {
         if (clicked) {
             ccOveserver.run();
             console.log("start: observer");
-            log.ccLog.date = new Date().getTime();
-            log.recordedAt = new Date().getTime();
+            logRecording = true;
+            log.recordedStAt = new Date().getTime();
         }
         else {
             ccOveserver.stop();
-            console.log("stop: observer");
-            log.recordedAt = null;
-            log.ccLog.date = 0;
-            log.ccLog.speeches = [];
+            log.recordedEdAt = new Date().getTime();
+            debugger;
+            // storageへの記録処理をここにいれる
+            logRecording = false;
+            log.recordedStAt = defaultLog.recordedStAt;
+            log.recordedEdAt = defaultLog.recordedEdAt;
+            log.speeches = defaultLog.speeches;
         }
     };
     const controlButtonElement = new _content_elements_switchingButtonElement__WEBPACK_IMPORTED_MODULE_0__.SwitchingButtonElement(callbackFuncClick);
@@ -468,12 +470,11 @@ const main = async () => {
         console.log(`name: ${name}`);
         console.log(`imagePath: ${imagePath}`);
         console.log(`speach: ${speach}`);
-        if (log.recordedAt !== null) {
-            log.ccLog.date = new Date().getTime();
-            log.ccLog.speeches.push({
-                date: new Date().getTime(),
+        if (logRecording) {
+            log.speeches.push({
                 name: name,
                 speach: speach,
+                recordedAt: new Date().getTime(),
             });
         }
     };
