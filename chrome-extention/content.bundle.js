@@ -2496,6 +2496,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core_chromeStorage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/core/chromeStorage */ "./src/core/chromeStorage.ts");
 /* harmony import */ var diff_match_patch__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! diff-match-patch */ "./node_modules/diff-match-patch/index.js");
 /* harmony import */ var diff_match_patch__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(diff_match_patch__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _core_utility__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/core/utility */ "./src/core/utility.ts");
+
 
 
 
@@ -2521,7 +2523,7 @@ const main = async () => {
     const log = {
         logRecorded: false,
         beforeSpeach: { name: "", speach: "", recordedAt: 0 },
-        ccLog: JSON.parse(JSON.stringify(defaultLog)),
+        ccLog: (0,_core_utility__WEBPACK_IMPORTED_MODULE_5__.copyObject)(defaultLog),
     };
     /**
      * コントロールボタン押下後のコールバック関数
@@ -2540,7 +2542,6 @@ const main = async () => {
             log.ccLog.speeches.push(log.beforeSpeach);
             log.ccLog.recordedEdAt = new Date().getTime();
             log.ccLog.speeches = log.ccLog.speeches.slice(1);
-            // storageへの記録処理をここにいれる
             const storage = await (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_3__.getStorage)("ccLogs");
             if (storage === null) {
                 (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_3__.setStorage)("ccLogs", []);
@@ -2550,7 +2551,7 @@ const main = async () => {
                 (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_3__.setStorage)("ccLogs", storage);
             }
             log.logRecorded = false;
-            log.ccLog = JSON.parse(JSON.stringify(defaultLog));
+            log.ccLog = (0,_core_utility__WEBPACK_IMPORTED_MODULE_5__.copyObject)(defaultLog);
             log.beforeSpeach = { name: "", speach: "", recordedAt: 0 };
         }
     };
@@ -2720,6 +2721,25 @@ const sendContents = (config) => {
 const addListener = (callbackFunc) => {
     chrome.runtime.onMessage.addListener(callbackFunc);
 };
+
+
+/***/ }),
+
+/***/ "./src/core/utility.ts":
+/*!*****************************!*\
+  !*** ./src/core/utility.ts ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "copyObject": () => (/* binding */ copyObject)
+/* harmony export */ });
+const copyObject = (object) => {
+    return JSON.parse(JSON.stringify(object));
+};
+
 
 
 /***/ })

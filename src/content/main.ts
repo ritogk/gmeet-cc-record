@@ -3,6 +3,7 @@ import { CcOveserver } from "@/content/core/ccOveserver"
 import { CcLog, CcLogObjectInterface } from "@/core/ccLog"
 import { setStorage, getStorage } from "@/core/chromeStorage"
 import { diff_match_patch } from "diff-match-patch"
+import { copyObject } from "@/core/utility"
 
 export const main = async (): Promise<void> => {
   console.log("start: application")
@@ -28,7 +29,7 @@ export const main = async (): Promise<void> => {
   const log = {
     logRecorded: false,
     beforeSpeach: { name: "", speach: "", recordedAt: 0 },
-    ccLog: JSON.parse(JSON.stringify(defaultLog)),
+    ccLog: copyObject(defaultLog),
   }
 
   /**
@@ -47,7 +48,6 @@ export const main = async (): Promise<void> => {
       log.ccLog.speeches.push(log.beforeSpeach)
       log.ccLog.recordedEdAt = new Date().getTime()
       log.ccLog.speeches = log.ccLog.speeches.slice(1)
-      // storageへの記録処理をここにいれる
       const storage = await getStorage<CcLogObjectInterface[]>("ccLogs")
       if (storage === null) {
         setStorage("ccLogs", [])
@@ -57,7 +57,7 @@ export const main = async (): Promise<void> => {
       }
 
       log.logRecorded = false
-      log.ccLog = JSON.parse(JSON.stringify(defaultLog))
+      log.ccLog = copyObject(defaultLog)
       log.beforeSpeach = { name: "", speach: "", recordedAt: 0 }
     }
   }
