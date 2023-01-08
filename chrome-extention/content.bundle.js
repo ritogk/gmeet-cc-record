@@ -269,7 +269,6 @@ const main = async () => {
     const callbackFuncChangeCcLogs = (ccLogs) => {
         console.log("mutate: ccLogs");
     };
-    let logRecording = false;
     const ccLog = new _core_ccLog__WEBPACK_IMPORTED_MODULE_2__.CcLog(callbackFuncChangeCcLogs);
     await ccLog.loadCcLogs();
     const defaultLog = {
@@ -277,7 +276,11 @@ const main = async () => {
         recordedEdAt: 0,
         speeches: [],
     };
-    const log = defaultLog;
+    const log = {
+        logRecorded: false,
+        beforeSpeachName: "",
+        ccLog: defaultLog,
+    };
     /**
      * コントロールボタン押下後のコールバック関数
      * @param clicked
@@ -287,18 +290,15 @@ const main = async () => {
         if (clicked) {
             ccOveserver.run();
             console.log("start: observer");
-            logRecording = true;
-            log.recordedStAt = new Date().getTime();
+            log.logRecorded = true;
+            log.ccLog.recordedStAt = new Date().getTime();
         }
         else {
             ccOveserver.stop();
-            log.recordedEdAt = new Date().getTime();
-            debugger;
+            log.ccLog.recordedEdAt = new Date().getTime();
             // storageへの記録処理をここにいれる
-            logRecording = false;
-            log.recordedStAt = defaultLog.recordedStAt;
-            log.recordedEdAt = defaultLog.recordedEdAt;
-            log.speeches = defaultLog.speeches;
+            log.logRecorded = false;
+            log.ccLog = defaultLog;
         }
     };
     const controlButtonElement = new _content_elements_switchingButtonElement__WEBPACK_IMPORTED_MODULE_0__.SwitchingButtonElement(callbackFuncClick);
@@ -314,8 +314,8 @@ const main = async () => {
         console.log(`name: ${name}`);
         console.log(`imagePath: ${imagePath}`);
         console.log(`speach: ${speach}`);
-        if (logRecording) {
-            log.speeches.push({
+        if (log.logRecorded) {
+            log.ccLog.speeches.push({
                 name: name,
                 speach: speach,
                 recordedAt: new Date().getTime(),

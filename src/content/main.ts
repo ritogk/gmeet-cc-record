@@ -11,7 +11,6 @@ export const main = async (): Promise<void> => {
     console.log("mutate: ccLogs")
   }
 
-  let logRecording = false
   const ccLog = new CcLog(callbackFuncChangeCcLogs)
   await ccLog.loadCcLogs()
   const defaultLog: CcLogObjectInterface = {
@@ -20,7 +19,11 @@ export const main = async (): Promise<void> => {
     speeches: [],
   }
 
-  const log = defaultLog
+  const log = {
+    logRecorded: false,
+    beforeSpeachName: "",
+    ccLog: defaultLog,
+  }
 
   /**
    * コントロールボタン押下後のコールバック関数
@@ -31,16 +34,14 @@ export const main = async (): Promise<void> => {
     if (clicked) {
       ccOveserver.run()
       console.log("start: observer")
-      logRecording = true
-      log.recordedStAt = new Date().getTime()
+      log.logRecorded = true
+      log.ccLog.recordedStAt = new Date().getTime()
     } else {
       ccOveserver.stop()
-      log.recordedEdAt = new Date().getTime()
+      log.ccLog.recordedEdAt = new Date().getTime()
       // storageへの記録処理をここにいれる
-      logRecording = false
-      log.recordedStAt = defaultLog.recordedStAt
-      log.recordedEdAt = defaultLog.recordedEdAt
-      log.speeches = defaultLog.speeches
+      log.logRecorded = false
+      log.ccLog = defaultLog
     }
   }
   const controlButtonElement = new SwitchingButtonElement(callbackFuncClick)
@@ -61,8 +62,8 @@ export const main = async (): Promise<void> => {
     console.log(`name: ${name}`)
     console.log(`imagePath: ${imagePath}`)
     console.log(`speach: ${speach}`)
-    if (logRecording) {
-      log.speeches.push({
+    if (log.logRecorded) {
+      log.ccLog.speeches.push({
         name: name,
         speach: speach,
         recordedAt: new Date().getTime(),
