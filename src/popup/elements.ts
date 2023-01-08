@@ -43,6 +43,7 @@ export class Elements {
       this.elemets.displayOriginalCc[1].checked = true
     }
 
+    // 変更を検知してcallbackを実行
     this.elemets.opacityRate.addEventListener("change", (event: Event) => {
       console.log("change opacityRate")
       if (event.target instanceof HTMLInputElement) {
@@ -55,6 +56,7 @@ export class Elements {
       }
     })
 
+    // 変更を検知してcallbackを実行
     this.elemets.displayOriginalCc[0].addEventListener("change", (event) => {
       console.log("change displayOriginalCcElements")
       if (event.target instanceof HTMLInputElement) {
@@ -66,6 +68,7 @@ export class Elements {
         )
       }
     })
+    // 変更を検知してcallbackを実行
     this.elemets.displayOriginalCc[1].addEventListener("change", (event) => {
       console.log("change displayOriginalCcElements")
       if (event.target instanceof HTMLInputElement) {

@@ -9,22 +9,10 @@
     <script src="./popup.bundle.js"></script>
   </head>
   <body class="shadow-lg bg-dark text-white-50">
-    <div class="border border-3 border-secondary" style="width: 400px">
+    <div class="border border-3 border-secondary" style="width: 600px">
       <div class="m-3">
         <div class="mb-3">
-          <label for="customRange1" class="form-label">字幕の透明度</label>
-          <input
-            type="range"
-            name="opacityRate"
-            class="form-range"
-            id="customRange1"
-            min="0"
-            max="1"
-            step="0.1"
-          />
-        </div>
-        <div class="mb-3">
-          <label class="mb-2">既存の字幕</label>
+          <label class="mb-2">出力フォーマット</label>
           <div class="btn-group w-100">
             <input
               type="radio"
@@ -33,7 +21,7 @@
               id="option1"
               autocomplete="off"
             />
-            <label class="btn btn-primary" for="option1">表示</label>
+            <label class="btn btn-primary" for="option1">テキスト</label>
 
             <input
               type="radio"
@@ -42,9 +30,53 @@
               id="option2"
               autocomplete="off"
             />
-            <label class="btn btn-primary" for="option2">非表示</label>
+            <label class="btn btn-primary" for="option2">マークダウン</label>
           </div>
         </div>
+        
+        <label class="mb-2">ログ</label>
+        <table class="table table-dark table-striped table-hover">
+            <tr>
+              
+              <th scope="col">日時</th>
+              <th scope="col">参加者</th>
+              <th scope="col" colspan="2" class="align-middle">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="align-middle">
+              <th scope="row">
+                2022/12/02:05:11:22
+              </th>
+              <td>
+                <span class="badge bg-secondary">あなた</span>
+                <span class="badge bg-secondary">伊藤</span>
+                <span class="badge bg-secondary">佐藤</span>
+              </td>
+              <td>
+                <button type="button" class="btn btn-primary btn-sm">出力</button>
+              </td>
+              <td>
+                <button type="button" class="btn btn-danger btn-sm">削除</button>
+              </td>
+            </tr>
+            <tr class="align-middle">
+              <th scope="row">
+                2022/12/02:05:11:22
+              </th>
+              <td>
+                <span class="badge bg-secondary">あなた</span>
+                <span class="badge bg-secondary">斎藤</span>
+              </td>
+              <td>
+                <button type="button" class="btn btn-primary btn-sm">出力</button>
+              </td>
+              <td>
+                <button type="button" class="btn btn-danger btn-sm">削除</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </body>

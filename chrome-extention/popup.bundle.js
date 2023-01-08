@@ -167,6 +167,7 @@ class Elements {
         else {
             this.elemets.displayOriginalCc[1].checked = true;
         }
+        // 変更を検知してcallbackを実行
         this.elemets.opacityRate.addEventListener("change", (event) => {
             console.log("change opacityRate");
             if (event.target instanceof HTMLInputElement) {
@@ -175,6 +176,7 @@ class Elements {
                     .value);
             }
         });
+        // 変更を検知してcallbackを実行
         this.elemets.displayOriginalCc[0].addEventListener("change", (event) => {
             var _a, _b;
             console.log("change displayOriginalCcElements");
@@ -185,6 +187,7 @@ class Elements {
                 this.callbackFuncChange(Number((_b = (_a = this.getOpacityRateElement()) === null || _a === void 0 ? void 0 : _a.value) !== null && _b !== void 0 ? _b : "0"), event.target.value);
             }
         });
+        // 変更を検知してcallbackを実行
         this.elemets.displayOriginalCc[1].addEventListener("change", (event) => {
             var _a, _b;
             console.log("change displayOriginalCcElements");
