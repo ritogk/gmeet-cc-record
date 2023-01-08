@@ -19,7 +19,9 @@
   "homepage": "https://github.com/ritogk/gmeet-cc-decoration#readme",
   "dependencies": {
     "@types/chrome": "^0.0.206",
+    "@types/diff-match-patch": "^1.0.32",
     "@types/node": "^18.11.18",
+    "diff-match-patch": "^1.0.5",
     "ts-loader": "^9.4.2",
     "typescript": "^4.9.4",
     "webpack": "^5.75.0",
