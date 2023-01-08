@@ -6,14 +6,13 @@ export interface ConfigInterface {
   observeGoogleStorage(): void
 }
 
-export enum DisplayOriginalCc {
-  OK = "1",
-  NG = "2",
+export enum FormatType {
+  TEXT = "1",
+  MARKDOWN = "2",
 }
 
 export interface ConfigObjectInterface {
-  opacityRate: number
-  displayOriginalCc: DisplayOriginalCc
+  formatType: FormatType
 }
 
 /**
@@ -21,8 +20,7 @@ export interface ConfigObjectInterface {
  */
 export class Config implements ConfigInterface {
   private config: ConfigObjectInterface = {
-    opacityRate: 0.5,
-    displayOriginalCc: DisplayOriginalCc.OK,
+    formatType: FormatType.TEXT,
   }
 
   private callbackFuncChangeConfig: (config: ConfigObjectInterface) => void
@@ -41,10 +39,8 @@ export class Config implements ConfigInterface {
   }
 
   loadConfig = async (): Promise<void> => {
-    this.config.opacityRate =
-      (await getStorage("opacityRate")) ?? this.config.opacityRate
-    this.config.displayOriginalCc =
-      (await getStorage("displayOriginalCc")) ?? this.config.displayOriginalCc
+    this.config.formatType =
+      (await getStorage("formatType")) ?? this.config.formatType
   }
 
   observeGoogleStorage = (): void => {
@@ -52,11 +48,8 @@ export class Config implements ConfigInterface {
       console.log("receive: popup → content_scripts")
       const data = JSON.parse(message)
       const config = this.getConfig()
-      if ("opacityRate" in data) {
-        config.opacityRate = data.opacityRate
-      }
-      if ("displayOriginalCc" in data) {
-        config.opacityRate = data.displayOriginalCc
+      if ("formatType" in data) {
+        config.formatType = data.formatType
       }
       this.setConfig(config)
     })

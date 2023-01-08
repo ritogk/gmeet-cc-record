@@ -1,4 +1,4 @@
-import { Config, ConfigObjectInterface, DisplayOriginalCc } from "@/core/config"
+import { Config, ConfigObjectInterface, FormatType } from "@/core/config"
 import { Elements } from "@/popup/elements"
 import { setStorage, sendContents } from "@/core/chromeStorage"
 export const run = async (): Promise<void> => {
@@ -11,21 +11,15 @@ export const run = async (): Promise<void> => {
   console.log(`load config: ${JSON.stringify(configData)}`)
 
   // elementsの変更後のコールバック関数
-  const callbackFuncChangeElement = (
-    opacityRate: number,
-    displayOriginalCc: DisplayOriginalCc
-  ) => {
+  const callbackFuncChangeElement = (formatType: FormatType) => {
     // configとストレージを更新
     console.log("changeElement")
-    configData.opacityRate = opacityRate
-    configData.displayOriginalCc = displayOriginalCc
-    setStorage("opacityRate", opacityRate)
-    setStorage("displayOriginalCc", displayOriginalCc)
+    configData.formatType = formatType
+    setStorage("formatType", formatType)
     sendContents(configData)
   }
   const elements = new Elements(
-    configData.opacityRate,
-    configData.displayOriginalCc,
+    configData.formatType,
     callbackFuncChangeElement
   )
 }

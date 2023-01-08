@@ -1,4 +1,4 @@
-import { ConfigObjectInterface, DisplayOriginalCc } from "@/core/config"
+import { ConfigObjectInterface } from "@/core/config"
 
 export const getStorage = async <T>(key: string): Promise<T | null> => {
   return new Promise((resolve) => {

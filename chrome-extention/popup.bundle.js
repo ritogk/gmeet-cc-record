@@ -49,23 +49,22 @@ const addListener = (callbackFunc) => {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Config": () => (/* binding */ Config),
-/* harmony export */   "DisplayOriginalCc": () => (/* binding */ DisplayOriginalCc)
+/* harmony export */   "FormatType": () => (/* binding */ FormatType)
 /* harmony export */ });
 /* harmony import */ var _core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/core/chromeStorage */ "./src/core/chromeStorage.ts");
 
-var DisplayOriginalCc;
-(function (DisplayOriginalCc) {
-    DisplayOriginalCc["OK"] = "1";
-    DisplayOriginalCc["NG"] = "2";
-})(DisplayOriginalCc || (DisplayOriginalCc = {}));
+var FormatType;
+(function (FormatType) {
+    FormatType["TEXT"] = "1";
+    FormatType["MARKDOWN"] = "2";
+})(FormatType || (FormatType = {}));
 /**
  * ポップアップ内で入力した設定情報
  */
 class Config {
     constructor(callbackFunc) {
         this.config = {
-            opacityRate: 0.5,
-            displayOriginalCc: DisplayOriginalCc.OK,
+            formatType: FormatType.TEXT,
         };
         this.getConfig = () => {
             return this.config;
@@ -75,22 +74,17 @@ class Config {
             this.callbackFuncChangeConfig(this.config);
         };
         this.loadConfig = async () => {
-            var _a, _b;
-            this.config.opacityRate =
-                (_a = (await (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.getStorage)("opacityRate"))) !== null && _a !== void 0 ? _a : this.config.opacityRate;
-            this.config.displayOriginalCc =
-                (_b = (await (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.getStorage)("displayOriginalCc"))) !== null && _b !== void 0 ? _b : this.config.displayOriginalCc;
+            var _a;
+            this.config.formatType =
+                (_a = (await (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.getStorage)("formatType"))) !== null && _a !== void 0 ? _a : this.config.formatType;
         };
         this.observeGoogleStorage = () => {
             (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.addListener)((message) => {
                 console.log("receive: popup → content_scripts");
                 const data = JSON.parse(message);
                 const config = this.getConfig();
-                if ("opacityRate" in data) {
-                    config.opacityRate = data.opacityRate;
-                }
-                if ("displayOriginalCc" in data) {
-                    config.opacityRate = data.displayOriginalCc;
+                if ("formatType" in data) {
+                    config.formatType = data.formatType;
                 }
                 this.setConfig(config);
             });
@@ -115,87 +109,65 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core_config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/core/config */ "./src/core/config.ts");
 
 class Elements {
-    constructor(opacityRate, displayOriginalCc, callbackFuncChange) {
+    constructor(formatType, callbackFuncChange) {
         this.elemets = {
-            opacityRate: null,
-            displayOriginalCc: null,
+            formatType: null,
         };
         this.getElements = () => {
             return this.elemets;
         };
-        this.getOpacityRateElement = () => {
-            return this.elemets.opacityRate;
+        this.getFormatTypeElement = () => {
+            return this.elemets.formatType;
         };
-        this.setOpacityRateElementValue = (opacityRate) => {
-            if (!this.elemets.opacityRate)
+        this.setFormatTypeElementChecked = (formatType) => {
+            if (!this.elemets.formatType)
                 return;
-            this.elemets.opacityRate.value = opacityRate.toString();
-        };
-        this.getDisplayOriginalCcElement = () => {
-            return this.elemets.displayOriginalCc;
-        };
-        this.setDisplayOriginalCcElementChecked = (displayOriginalCc) => {
-            if (!this.elemets.displayOriginalCc)
-                return;
-            if (displayOriginalCc === _core_config__WEBPACK_IMPORTED_MODULE_0__.DisplayOriginalCc.OK) {
-                this.elemets.displayOriginalCc[0].checked = true;
+            if (formatType === _core_config__WEBPACK_IMPORTED_MODULE_0__.FormatType.TEXT) {
+                this.elemets.formatType[0].checked = true;
             }
-            if (displayOriginalCc === _core_config__WEBPACK_IMPORTED_MODULE_0__.DisplayOriginalCc.NG) {
-                this.elemets.displayOriginalCc[1].checked = true;
+            if (formatType === _core_config__WEBPACK_IMPORTED_MODULE_0__.FormatType.MARKDOWN) {
+                this.elemets.formatType[1].checked = true;
             }
         };
-        this.getDisplayOriginalCcElementChecked = () => {
-            if (!this.elemets.displayOriginalCc)
+        this.getFormatTypeElementChecked = () => {
+            if (!this.elemets.formatType)
                 return null;
-            if (this.elemets.displayOriginalCc[0].checked) {
-                return this.elemets.displayOriginalCc[0];
+            if (this.elemets.formatType[0].checked) {
+                return this.elemets.formatType[0];
             }
             else {
-                return this.elemets.displayOriginalCc[1];
+                return this.elemets.formatType[1];
             }
         };
         this.callbackFuncChange = callbackFuncChange;
-        this.elemets.opacityRate = (document.getElementsByName("opacityRate")[0]);
-        this.elemets.displayOriginalCc = (document.getElementsByName("displayOriginalCc"));
-        this.elemets.displayOriginalCc[0].value = _core_config__WEBPACK_IMPORTED_MODULE_0__.DisplayOriginalCc.OK;
-        this.elemets.displayOriginalCc[1].value = _core_config__WEBPACK_IMPORTED_MODULE_0__.DisplayOriginalCc.NG;
+        this.elemets.formatType = (document.getElementsByName("formatType"));
+        this.elemets.formatType[0].value = _core_config__WEBPACK_IMPORTED_MODULE_0__.FormatType.TEXT;
+        this.elemets.formatType[1].value = _core_config__WEBPACK_IMPORTED_MODULE_0__.FormatType.MARKDOWN;
         // 初期値
-        this.elemets.opacityRate.value = opacityRate.toString();
-        if (displayOriginalCc === _core_config__WEBPACK_IMPORTED_MODULE_0__.DisplayOriginalCc.OK) {
-            this.elemets.displayOriginalCc[0].checked = true;
+        if (formatType === _core_config__WEBPACK_IMPORTED_MODULE_0__.FormatType.TEXT) {
+            this.elemets.formatType[0].checked = true;
         }
         else {
-            this.elemets.displayOriginalCc[1].checked = true;
+            this.elemets.formatType[1].checked = true;
         }
         // 変更を検知してcallbackを実行
-        this.elemets.opacityRate.addEventListener("change", (event) => {
-            console.log("change opacityRate");
-            if (event.target instanceof HTMLInputElement) {
-                console.log(event.target.value);
-                this.callbackFuncChange(Number(event.target.value), this.getDisplayOriginalCcElementChecked()
-                    .value);
-            }
-        });
-        // 変更を検知してcallbackを実行
-        this.elemets.displayOriginalCc[0].addEventListener("change", (event) => {
-            var _a, _b;
-            console.log("change displayOriginalCcElements");
+        this.elemets.formatType[0].addEventListener("change", (event) => {
+            console.log("change formatTypeElements");
             if (event.target instanceof HTMLInputElement) {
                 if (!event.target.checked)
                     return;
                 console.log(event.target.value);
-                this.callbackFuncChange(Number((_b = (_a = this.getOpacityRateElement()) === null || _a === void 0 ? void 0 : _a.value) !== null && _b !== void 0 ? _b : "0"), event.target.value);
+                this.callbackFuncChange(event.target.value);
             }
         });
         // 変更を検知してcallbackを実行
-        this.elemets.displayOriginalCc[1].addEventListener("change", (event) => {
-            var _a, _b;
-            console.log("change displayOriginalCcElements");
+        this.elemets.formatType[1].addEventListener("change", (event) => {
+            console.log("change formatTypeElements");
             if (event.target instanceof HTMLInputElement) {
                 if (!event.target.checked)
                     return;
                 console.log(event.target.value);
-                this.callbackFuncChange(Number((_b = (_a = this.getOpacityRateElement()) === null || _a === void 0 ? void 0 : _a.value) !== null && _b !== void 0 ? _b : "0"), event.target.value);
+                this.callbackFuncChange(event.target.value);
             }
         });
     }
@@ -284,16 +256,14 @@ const run = async () => {
     const configData = config.getConfig();
     console.log(`load config: ${JSON.stringify(configData)}`);
     // elementsの変更後のコールバック関数
-    const callbackFuncChangeElement = (opacityRate, displayOriginalCc) => {
+    const callbackFuncChangeElement = (formatType) => {
         // configとストレージを更新
         console.log("changeElement");
-        configData.opacityRate = opacityRate;
-        configData.displayOriginalCc = displayOriginalCc;
-        (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_2__.setStorage)("opacityRate", opacityRate);
-        (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_2__.setStorage)("displayOriginalCc", displayOriginalCc);
+        configData.formatType = formatType;
+        (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_2__.setStorage)("formatType", formatType);
         (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_2__.sendContents)(configData);
     };
-    const elements = new _popup_elements__WEBPACK_IMPORTED_MODULE_1__.Elements(configData.opacityRate, configData.displayOriginalCc, callbackFuncChangeElement);
+    const elements = new _popup_elements__WEBPACK_IMPORTED_MODULE_1__.Elements(configData.formatType, callbackFuncChangeElement);
 };
 window.addEventListener("load", run, false);
 
