@@ -8,11 +8,7 @@ import { copyObject } from "@/core/utility"
 export const main = async (): Promise<void> => {
   console.log("start: application")
 
-  const dmp = new diff_match_patch()
-  // const allDiffs = dmp.diff_main(
-  //   "A B C D E F ghijk 前回の会話と一致している文字列を調べる 一致していただく つける 全く一致していなかったらログイン 追加する。 一人で話し続ける時に記録する処理がいる直前と同じ名前だったら、文字列をくっ",
-  //   "一致していただく つける 全く一致していなかったらログイン 追加する。 一人で話し続ける時に記録する処理がいる直前と同じ名前だったら、文字列をくっ つけるようにしようかな"
-  // )
+  const diffMatchPatch = new diff_match_patch()
 
   const callbackFuncChangeCcLogs = (ccLogs: CcLogObjectInterface[]): void => {
     console.log("mutate: ccLogs")
@@ -56,6 +52,7 @@ export const main = async (): Promise<void> => {
         setStorage("ccLogs", storage)
       }
 
+      console.log(log.ccLog)
       log.logRecorded = false
       log.ccLog = copyObject(defaultLog)
       log.beforeSpeach = { name: "", speach: "", recordedAt: 0 }
@@ -76,56 +73,44 @@ export const main = async (): Promise<void> => {
     speach: string
   ) => {
     if (speach.trim() === "") return
-    // console.log("mutate: cc")
-    // console.log(`name: ${name}`)
-    // console.log(`imagePath: ${imagePath}`)
-    // console.log(`speach: ${speach}`)
-
-    let aaa = speach
+    console.log("mutate: cc")
+    console.log(`name: ${name}`)
+    console.log(`imagePath: ${imagePath}`)
+    console.log(`speach: ${speach}`)
 
     if (log.logRecorded) {
+      let originalSpeach
       if (log.beforeSpeach.name === name) {
-        let diffs = dmp.diff_main(log.beforeSpeach.speach, speach)
-        // diffsを人間が読みやすいように整形する
-        dmp.diff_cleanupSemantic(diffs)
+        // 直前の字幕との差分を作成する
+        let diffs = diffMatchPatch.diff_main(log.beforeSpeach.speach, speach)
+        // diffを人間が読みやすいように整形する
+        diffMatchPatch.diff_cleanupSemantic(diffs)
 
         // 空白文字だけの奴を削除
         diffs = diffs.filter((x) => {
           return x[1].trim().length > 0
         })
 
-        const str = diffs
+        // 差分を結合した文字列を作成する
+        originalSpeach = diffs
           .map((x) => x[1])
           .reduce((acc, cur) => acc + cur.trim())
-        aaa = str
-
-        console.log("before: " + log.beforeSpeach.speach)
-        console.log("new: " + speach)
-        console.log("create: " + aaa)
-        console.log(JSON.stringify(diffs))
       } else {
+        // 会話している人間が変わったタイミングでログにいれる。
         log.ccLog.speeches.push({
           name: log.beforeSpeach.name,
           speach: log.beforeSpeach.speach,
           recordedAt: new Date().getTime(),
         })
-        aaa = speach
+        originalSpeach = speach
       }
 
-      //console.log(allDiffs)
+      log.beforeSpeach = {
+        name: name,
+        speach: originalSpeach,
+        recordedAt: new Date().getTime(),
+      }
     }
-
-    // 前回の会話と一致している文字数を調べる。
-    // 一致していたらくっつける
-    // 全く一致していなかったら、ログに追加する処理をいれる。
-    log.beforeSpeach = {
-      name: name,
-      speach: aaa,
-      recordedAt: new Date().getTime(),
-    }
-
-    // １人で話し続けてる時に記録する処理がいる
-    // 直前と同じ名前だったら、文字列をくっつけるようにしようかな。
   }
   const ccOveserver = new CcOveserver(callbackFuncObserver)
 }
