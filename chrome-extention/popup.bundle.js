@@ -2,71 +2,9 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./src/core/config.ts":
-/*!****************************!*\
-  !*** ./src/core/config.ts ***!
-  \****************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Config": () => (/* binding */ Config),
-/* harmony export */   "DisplayOriginalCc": () => (/* binding */ DisplayOriginalCc)
-/* harmony export */ });
-/* harmony import */ var _core_googleStorage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/core/googleStorage */ "./src/core/googleStorage.ts");
-
-var DisplayOriginalCc;
-(function (DisplayOriginalCc) {
-    DisplayOriginalCc["OK"] = "1";
-    DisplayOriginalCc["NG"] = "2";
-})(DisplayOriginalCc || (DisplayOriginalCc = {}));
-/**
- * ポップアップ内で入力した設定情報
- */
-class Config {
-    constructor(callbackFunc) {
-        this.config = {
-            opacityRate: 0.5,
-            displayOriginalCc: DisplayOriginalCc.OK,
-        };
-        this.getConfig = () => {
-            return this.config;
-        };
-        this.setConfig = (config) => {
-            this.config = config;
-            this.callbackFuncChangeConfig(this.config);
-        };
-        this.loadConfig = async () => {
-            var _a, _b;
-            this.config.opacityRate =
-                (_a = (await (0,_core_googleStorage__WEBPACK_IMPORTED_MODULE_0__.getStorage)("opacityRate"))) !== null && _a !== void 0 ? _a : this.config.opacityRate;
-            this.config.displayOriginalCc =
-                (_b = (await (0,_core_googleStorage__WEBPACK_IMPORTED_MODULE_0__.getStorage)("displayOriginalCc"))) !== null && _b !== void 0 ? _b : this.config.displayOriginalCc;
-        };
-        this.observeGoogleStorage = () => {
-            (0,_core_googleStorage__WEBPACK_IMPORTED_MODULE_0__.addListener)((message) => {
-                console.log("receive: popup → content_scripts");
-                const data = JSON.parse(message);
-                const config = this.getConfig();
-                if ("opacityRate" in data) {
-                    config.opacityRate = data.opacityRate;
-                }
-                if ("displayOriginalCc" in data) {
-                    config.opacityRate = data.displayOriginalCc;
-                }
-                this.setConfig(config);
-            });
-        };
-        this.callbackFuncChangeConfig = callbackFunc;
-    }
-}
-
-
-/***/ }),
-
-/***/ "./src/core/googleStorage.ts":
+/***/ "./src/core/chromeStorage.ts":
 /*!***********************************!*\
-  !*** ./src/core/googleStorage.ts ***!
+  !*** ./src/core/chromeStorage.ts ***!
   \***********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -98,6 +36,68 @@ const sendContents = (config) => {
 const addListener = (callbackFunc) => {
     chrome.runtime.onMessage.addListener(callbackFunc);
 };
+
+
+/***/ }),
+
+/***/ "./src/core/config.ts":
+/*!****************************!*\
+  !*** ./src/core/config.ts ***!
+  \****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Config": () => (/* binding */ Config),
+/* harmony export */   "DisplayOriginalCc": () => (/* binding */ DisplayOriginalCc)
+/* harmony export */ });
+/* harmony import */ var _core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/core/chromeStorage */ "./src/core/chromeStorage.ts");
+
+var DisplayOriginalCc;
+(function (DisplayOriginalCc) {
+    DisplayOriginalCc["OK"] = "1";
+    DisplayOriginalCc["NG"] = "2";
+})(DisplayOriginalCc || (DisplayOriginalCc = {}));
+/**
+ * ポップアップ内で入力した設定情報
+ */
+class Config {
+    constructor(callbackFunc) {
+        this.config = {
+            opacityRate: 0.5,
+            displayOriginalCc: DisplayOriginalCc.OK,
+        };
+        this.getConfig = () => {
+            return this.config;
+        };
+        this.setConfig = (config) => {
+            this.config = config;
+            this.callbackFuncChangeConfig(this.config);
+        };
+        this.loadConfig = async () => {
+            var _a, _b;
+            this.config.opacityRate =
+                (_a = (await (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.getStorage)("opacityRate"))) !== null && _a !== void 0 ? _a : this.config.opacityRate;
+            this.config.displayOriginalCc =
+                (_b = (await (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.getStorage)("displayOriginalCc"))) !== null && _b !== void 0 ? _b : this.config.displayOriginalCc;
+        };
+        this.observeGoogleStorage = () => {
+            (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.addListener)((message) => {
+                console.log("receive: popup → content_scripts");
+                const data = JSON.parse(message);
+                const config = this.getConfig();
+                if ("opacityRate" in data) {
+                    config.opacityRate = data.opacityRate;
+                }
+                if ("displayOriginalCc" in data) {
+                    config.opacityRate = data.displayOriginalCc;
+                }
+                this.setConfig(config);
+            });
+        };
+        this.callbackFuncChangeConfig = callbackFunc;
+    }
+}
 
 
 /***/ }),
@@ -269,7 +269,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _core_config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/core/config */ "./src/core/config.ts");
 /* harmony import */ var _popup_elements__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/popup/elements */ "./src/popup/elements.ts");
-/* harmony import */ var _core_googleStorage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/core/googleStorage */ "./src/core/googleStorage.ts");
+/* harmony import */ var _core_chromeStorage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/core/chromeStorage */ "./src/core/chromeStorage.ts");
 
 
 
@@ -286,9 +286,9 @@ const run = async () => {
         console.log("changeElement");
         configData.opacityRate = opacityRate;
         configData.displayOriginalCc = displayOriginalCc;
-        (0,_core_googleStorage__WEBPACK_IMPORTED_MODULE_2__.setStorage)("opacityRate", opacityRate);
-        (0,_core_googleStorage__WEBPACK_IMPORTED_MODULE_2__.setStorage)("displayOriginalCc", displayOriginalCc);
-        (0,_core_googleStorage__WEBPACK_IMPORTED_MODULE_2__.sendContents)(configData);
+        (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_2__.setStorage)("opacityRate", opacityRate);
+        (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_2__.setStorage)("displayOriginalCc", displayOriginalCc);
+        (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_2__.sendContents)(configData);
     };
     const elements = new _popup_elements__WEBPACK_IMPORTED_MODULE_1__.Elements(configData.opacityRate, configData.displayOriginalCc, callbackFuncChangeElement);
 };

@@ -1,6 +1,6 @@
 import { Config, ConfigObjectInterface, DisplayOriginalCc } from "@/core/config"
 import { Elements } from "@/popup/elements"
-import { setStorage, sendContents } from "@/core/googleStorage"
+import { setStorage, sendContents } from "@/core/chromeStorage"
 export const run = async (): Promise<void> => {
   console.log("start: popup")
 

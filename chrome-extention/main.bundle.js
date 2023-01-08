@@ -258,7 +258,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "CcLog": () => (/* binding */ CcLog)
 /* harmony export */ });
-/* harmony import */ var _core_googleStorage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/core/googleStorage */ "./src/core/googleStorage.ts");
+/* harmony import */ var _core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/core/chromeStorage */ "./src/core/chromeStorage.ts");
 
 /**
  * ポップアップ内で入力した設定情報
@@ -287,14 +287,14 @@ class CcLog {
             this.callbackFuncChange(this.logs.ccLogs);
         };
         this.saveCcLogs = () => {
-            (0,_core_googleStorage__WEBPACK_IMPORTED_MODULE_0__.setStorage)("ccLogs", this.logs.ccLogs);
+            (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.setStorage)("ccLogs", this.logs.ccLogs);
         };
         this.loadCcLogs = async () => {
             var _a;
-            this.setCcLogs((_a = (await (0,_core_googleStorage__WEBPACK_IMPORTED_MODULE_0__.getStorage)("ccLogs"))) !== null && _a !== void 0 ? _a : []);
+            this.setCcLogs((_a = (await (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.getStorage)("ccLogs"))) !== null && _a !== void 0 ? _a : []);
         };
         this.observeGoogleStorage = () => {
-            (0,_core_googleStorage__WEBPACK_IMPORTED_MODULE_0__.addListener)((message) => {
+            (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.addListener)((message) => {
                 const data = JSON.parse(message);
                 const logs = this.logs;
                 if ("ccLogs" in data) {
@@ -310,9 +310,9 @@ class CcLog {
 
 /***/ }),
 
-/***/ "./src/core/googleStorage.ts":
+/***/ "./src/core/chromeStorage.ts":
 /*!***********************************!*\
-  !*** ./src/core/googleStorage.ts ***!
+  !*** ./src/core/chromeStorage.ts ***!
   \***********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 

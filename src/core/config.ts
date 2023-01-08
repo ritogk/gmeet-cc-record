@@ -1,4 +1,4 @@
-import { getStorage, addListener } from "@/core/googleStorage"
+import { getStorage, addListener } from "@/core/chromeStorage"
 export interface ConfigInterface {
   loadConfig(): Promise<void>
   getConfig(): ConfigObjectInterface
