@@ -21,7 +21,7 @@ export const main = async (): Promise<void> => {
 
   const log = {
     logRecorded: false,
-    beforeSpeachName: "",
+    beforeSpeach: { name: "", speach: "", recordedAt: 0 },
     ccLog: defaultLog,
   }
 
@@ -38,6 +38,7 @@ export const main = async (): Promise<void> => {
       log.ccLog.recordedStAt = new Date().getTime()
     } else {
       ccOveserver.stop()
+      log.ccLog.speeches.push(log.beforeSpeach)
       log.ccLog.recordedEdAt = new Date().getTime()
       // storageへの記録処理をここにいれる
       log.logRecorded = false
@@ -63,12 +64,17 @@ export const main = async (): Promise<void> => {
     console.log(`imagePath: ${imagePath}`)
     console.log(`speach: ${speach}`)
     if (log.logRecorded) {
-      log.ccLog.speeches.push({
-        name: name,
-        speach: speach,
-        recordedAt: new Date().getTime(),
-      })
+      if (log.beforeSpeach.name !== name) {
+        log.ccLog.speeches.push(log.beforeSpeach)
+      }
     }
+    log.beforeSpeach = {
+      name: name,
+      speach: speach,
+      recordedAt: new Date().getTime(),
+    }
+
+    // １人で話し続けてる時に記録する処理がいる
   }
   const ccOveserver = new CcOveserver(callbackFuncObserver)
 }
