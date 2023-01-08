@@ -2537,6 +2537,8 @@ const main = async () => {
             ccOveserver.stop();
             log.ccLog.speeches.push(log.beforeSpeach);
             log.ccLog.recordedEdAt = new Date().getTime();
+            log.ccLog.speeches = log.ccLog.speeches.slice(1);
+            debugger;
             // storageへの記録処理をここにいれる
             log.logRecorded = false;
             log.ccLog = defaultLog;
@@ -2557,71 +2559,32 @@ const main = async () => {
         // console.log(`name: ${name}`)
         // console.log(`imagePath: ${imagePath}`)
         // console.log(`speach: ${speach}`)
-        let aaa = speach.replace(/\s+/g, "");
+        let aaa = speach;
         if (log.logRecorded) {
             if (log.beforeSpeach.name === name) {
-                let diffs = dmp.diff_main(log.beforeSpeach.speach, speach.replace(/\s+/g, ""));
+                let diffs = dmp.diff_main(log.beforeSpeach.speach, speach);
                 // diffsを人間が読みやすいように整形する
                 dmp.diff_cleanupSemantic(diffs);
                 // 空白文字だけの奴を削除
                 diffs = diffs.filter((x) => {
                     return x[1].trim().length > 0;
                 });
-                // // 記号削除
-                // diffs = diffs.filter((x) => {
-                //   return x[1] !== "。" && x[1] !== "、"
-                // })
-                // if (diffs.length <= 6) {
                 const str = diffs
                     .map((x) => x[1])
                     .reduce((acc, cur) => acc + cur.trim());
                 aaa = str;
-                //if (aaa.length >= 50)
                 console.log("before: " + log.beforeSpeach.speach);
                 console.log("new: " + speach);
                 console.log("create: " + aaa);
                 console.log(JSON.stringify(diffs));
-                // if (added !== undefined) {
-                //   aaa = added[1]
-                // }
-                // } else {
-                //   console.log(str)
-                // }
-                // const disappearance = diffs.find((x) => x[0] === -1)
-                // const universal = diffs.find((x) => x[0] === 0)
-                // const added = diffs.find((x) => x[0] === 1)
-                // if (universal?.[1].trim() !== speach.trim() && added !== undefined) {
-                //   aaa =
-                //     (disappearance?.[1] ?? "") +
-                //     (universal?.[1] ?? "") +
-                //     (added?.[1] ?? "")
-                //   console.log("before: " + log.beforeSpeach.speach)
-                //   console.log("new: " + speach)
-                //   console.log("create: " + aaa)
-                //   console.log("---------------------------------")
-                // } else {
-                //   // 以下のような字幕が飛んできた時に処理がおかしくなるのでその対応
-                //   // before: 前回の会話と一致している文字列を調べる。 一致していただく つける。
-                //   // new:    前回の会話と一致している文字列を調べる。
-                //   aaa = log.beforeSpeach.speach
-                //   console.log("before: " + log.beforeSpeach.speach)
-                //   console.log("new: " + speach)
-                //   console.log("warning: " + aaa)
-                //   console.log(JSON.stringify(diffs))
-                // }
-                // } else {
-                //   // ログ追加!
-                //   log.ccLog.speeches.push({
-                //     name: name,
-                //     speach: log.beforeSpeach.speach,
-                //     recordedAt: new Date().getTime(),
-                //   })
-                //   console.log("before: " + log.beforeSpeach.speach)
-                //   console.log("new: " + speach)
-                //   console.log("★add log <6: " + log.beforeSpeach.speach)
-                //   console.log(JSON.stringify(diffs))
-                //   aaa = speach.replace(/\s+/g, "")
-                // }
+            }
+            else {
+                log.ccLog.speeches.push({
+                    name: log.beforeSpeach.name,
+                    speach: log.beforeSpeach.speach,
+                    recordedAt: new Date().getTime(),
+                });
+                aaa = speach;
             }
             //console.log(allDiffs)
         }
