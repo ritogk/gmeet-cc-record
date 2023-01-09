@@ -17,7 +17,7 @@ export class CcLogFormatter implements ccLogFormatterInterface {
   getFormatedText(): string {
     let formatedText = ""
     this.ccLog.speeches.forEach((x) => {
-      const row = `time:${x.recordedAt} name:${x.name} speach:${x.speach}\n`
+      const row = `${x.recordedAt},${x.name},${x.speach}\n`
       formatedText += row
     })
     return formatedText
