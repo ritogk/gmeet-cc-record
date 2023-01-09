@@ -242,7 +242,10 @@ class Elements {
             (_a = document.getElementById("logTableData")) === null || _a === void 0 ? void 0 : _a.remove();
             const tbodyElement = document.createElement("tbody");
             tbodyElement.id = "logTableData";
-            ccLogs.forEach((ccLog) => {
+            const sortCcLogs = ccLogs.sort((a, b) => {
+                return b.recordedStAt - a.recordedStAt;
+            });
+            sortCcLogs.forEach((ccLog) => {
                 const trElement = document.createElement("tr");
                 trElement.className = "align-middle";
                 // 日付

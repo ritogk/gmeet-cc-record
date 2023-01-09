@@ -98,7 +98,10 @@ export class Elements {
     document.getElementById("logTableData")?.remove()
     const tbodyElement = document.createElement("tbody")
     tbodyElement.id = "logTableData"
-    ccLogs.forEach((ccLog) => {
+    const sortCcLogs = ccLogs.sort((a: any, b: any) => {
+      return b.recordedStAt - a.recordedStAt
+    })
+    sortCcLogs.forEach((ccLog) => {
       const trElement = document.createElement("tr")
       trElement.className = "align-middle"
       // 日付
