@@ -21794,6 +21794,7 @@ const format = (milliSeconds, format) => {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "copyObject": () => (/* binding */ copyObject),
+/* harmony export */   "downloadTextFile": () => (/* binding */ downloadTextFile),
 /* harmony export */   "groupByObject": () => (/* binding */ groupByObject)
 /* harmony export */ });
 const copyObject = (object) => {
@@ -21804,6 +21805,15 @@ const groupByObject = (array, getKey) => array.reduce((obj, cur, idx, src) => {
     (obj[key] || (obj[key] = [])).push(cur);
     return obj;
 }, {});
+const downloadTextFile = (text, fileName) => {
+    const blob = new Blob([text], { type: "text/plain" });
+    const aTag = document.createElement("a");
+    aTag.href = URL.createObjectURL(blob);
+    aTag.target = "_blank";
+    aTag.download = fileName;
+    aTag.click();
+    URL.revokeObjectURL(aTag.href);
+};
 
 
 
@@ -22107,9 +22117,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _popup_elements_logTableElement__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/popup/elements/logTableElement */ "./src/popup/elements/logTableElement.ts");
 /* harmony import */ var _popup_ccLogFormatter__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/popup/ccLogFormatter */ "./src/popup/ccLogFormatter.ts");
 /* harmony import */ var _core_date__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/core/date */ "./src/core/date.ts");
+/* harmony import */ var _core_utility__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/core/utility */ "./src/core/utility.ts");
 
 
 // import { Elements } from "@/popup/elements"
+
 
 
 
@@ -22149,17 +22161,9 @@ const run = async () => {
     const callbackFuncClickOutPut = (ccLog) => {
         if (!ccLog)
             return;
-        console.log(ccLog.id);
         const ccLogFormatter = new _popup_ccLogFormatter__WEBPACK_IMPORTED_MODULE_5__.CcLogFormatter(ccLog);
         const fomatedText = ccLogFormatter.getFormatedText();
-        console.log(fomatedText);
-        const blob = new Blob([fomatedText], { type: "text/plain" });
-        const aTag = document.createElement("a");
-        aTag.href = URL.createObjectURL(blob);
-        aTag.target = "_blank";
-        aTag.download = (0,_core_date__WEBPACK_IMPORTED_MODULE_6__.format)(ccLog.recordedStAt, "YYYYMMDDHHmmss");
-        aTag.click();
-        URL.revokeObjectURL(aTag.href);
+        (0,_core_utility__WEBPACK_IMPORTED_MODULE_7__.downloadTextFile)(fomatedText, (0,_core_date__WEBPACK_IMPORTED_MODULE_6__.format)(ccLog.recordedStAt, "YYYYMMDDHHmmss"));
     };
     const logTableElement = new _popup_elements_logTableElement__WEBPACK_IMPORTED_MODULE_4__.LogTableElement(callbackFuncClickOutPut, ccLog.getCcLogs());
     console.log(ccLog.getCcLogs());

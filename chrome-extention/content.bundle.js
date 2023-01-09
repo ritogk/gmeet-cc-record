@@ -24353,6 +24353,7 @@ const format = (milliSeconds, format) => {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "copyObject": () => (/* binding */ copyObject),
+/* harmony export */   "downloadTextFile": () => (/* binding */ downloadTextFile),
 /* harmony export */   "groupByObject": () => (/* binding */ groupByObject)
 /* harmony export */ });
 const copyObject = (object) => {
@@ -24363,6 +24364,15 @@ const groupByObject = (array, getKey) => array.reduce((obj, cur, idx, src) => {
     (obj[key] || (obj[key] = [])).push(cur);
     return obj;
 }, {});
+const downloadTextFile = (text, fileName) => {
+    const blob = new Blob([text], { type: "text/plain" });
+    const aTag = document.createElement("a");
+    aTag.href = URL.createObjectURL(blob);
+    aTag.target = "_blank";
+    aTag.download = fileName;
+    aTag.click();
+    URL.revokeObjectURL(aTag.href);
+};
 
 
 

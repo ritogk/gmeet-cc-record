@@ -6,6 +6,7 @@ import { FormatTypeElement } from "@/popup/elements/formatTypeElement"
 import { LogTableElement } from "@/popup/elements/logTableElement"
 import { CcLogFormatter } from "@/popup/ccLogFormatter"
 import { format } from "@/core/date"
+import { downloadTextFile } from "@/core/utility"
 
 export const run = async (): Promise<void> => {
   console.log("start: popup")
@@ -45,18 +46,9 @@ export const run = async (): Promise<void> => {
   // 出力ボタン押下後のコールバック関数
   const callbackFuncClickOutPut = (ccLog: CcLogObjectInterface | undefined) => {
     if (!ccLog) return
-    console.log(ccLog.id)
     const ccLogFormatter = new CcLogFormatter(ccLog)
     const fomatedText = ccLogFormatter.getFormatedText()
-    console.log(fomatedText)
-
-    const blob = new Blob([fomatedText], { type: "text/plain" })
-    const aTag = document.createElement("a")
-    aTag.href = URL.createObjectURL(blob)
-    aTag.target = "_blank"
-    aTag.download = format(ccLog.recordedStAt, "YYYYMMDDHHmmss")
-    aTag.click()
-    URL.revokeObjectURL(aTag.href)
+    downloadTextFile(fomatedText, format(ccLog.recordedStAt, "YYYYMMDDHHmmss"))
   }
   const logTableElement = new LogTableElement(
     callbackFuncClickOutPut,
