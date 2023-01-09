@@ -21635,8 +21635,22 @@ class CcLog {
             (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.setStorage)("ccLogs", this.logs.ccLogs);
         };
         this.loadCcLogs = async () => {
-            var _a;
-            this.setCcLogs((_a = (await (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.getStorage)("ccLogs"))) !== null && _a !== void 0 ? _a : []);
+            const ccLogs = await (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.getStorage)("ccLogs");
+            if (!ccLogs) {
+                this.setCcLogs([]);
+                return;
+            }
+            let sortCcLogs = ccLogs.sort((a, b) => {
+                return b.recordedStAt - a.recordedStAt;
+            });
+            sortCcLogs = sortCcLogs.map((x) => {
+                let cclog = x;
+                cclog.speeches = cclog.speeches.sort((a, b) => {
+                    return a.recordedAt - b.recordedAt;
+                });
+                return cclog;
+            });
+            this.setCcLogs(sortCcLogs);
         };
         this.observeGoogleStorage = () => {
             chrome.storage.onChanged.addListener((changes, namespace) => {

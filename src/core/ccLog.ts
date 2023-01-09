@@ -63,7 +63,22 @@ export class CcLog implements CcLogInterface {
   }
 
   loadCcLogs = async (): Promise<void> => {
-    this.setCcLogs((await getStorage("ccLogs")) ?? [])
+    const ccLogs = await getStorage<CcLogObjectInterface[]>("ccLogs")
+    if (!ccLogs) {
+      this.setCcLogs([])
+      return
+    }
+    let sortCcLogs = ccLogs.sort((a: any, b: any) => {
+      return b.recordedStAt - a.recordedStAt
+    })
+    sortCcLogs = sortCcLogs.map((x) => {
+      let cclog = x
+      cclog.speeches = cclog.speeches.sort((a: any, b: any) => {
+        return a.recordedAt - b.recordedAt
+      })
+      return cclog
+    })
+    this.setCcLogs(sortCcLogs)
   }
 
   observeGoogleStorage = (): void => {

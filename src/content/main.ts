@@ -52,6 +52,9 @@ export const main = async (): Promise<void> => {
       if (storage === null) {
         setStorage("ccLogs", [log.ccLog])
       } else {
+        log.ccLog.speeches = log.ccLog.speeches.sort((a: any, b: any) => {
+          return a.recordedAt - b.recordedAt
+        })
         storage.push(log.ccLog)
         setStorage("ccLogs", storage)
       }
