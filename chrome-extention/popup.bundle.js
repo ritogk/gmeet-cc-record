@@ -21890,7 +21890,7 @@ class LogTableElement {
                 const tdNameElement = trElement.appendChild(document.createElement("td"));
                 nameList.forEach((name) => {
                     const spanElement = document.createElement("span");
-                    spanElement.className = "badge bg-secondary";
+                    spanElement.className = "badge bg-secondary me-1";
                     spanElement.textContent = name;
                     tdNameElement.appendChild(spanElement);
                 });
