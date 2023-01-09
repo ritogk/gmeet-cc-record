@@ -1,6 +1,5 @@
 import { CcLog, CcLogObjectInterface } from "@/core/ccLog"
 import { Config, ConfigObjectInterface, FormatType } from "@/core/config"
-// import { Elements } from "@/popup/elements"
 import { setStorage, sendContents } from "@/core/chromeStorage"
 import { FormatTypeElement } from "@/popup/elements/formatTypeElement"
 import { LogTableElement } from "@/popup/elements/logTableElement"
