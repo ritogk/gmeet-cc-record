@@ -2,6 +2,68 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./src/core/ccLog.ts":
+/*!***************************!*\
+  !*** ./src/core/ccLog.ts ***!
+  \***************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "CcLog": () => (/* binding */ CcLog)
+/* harmony export */ });
+/* harmony import */ var _core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/core/chromeStorage */ "./src/core/chromeStorage.ts");
+
+/**
+ * ポップアップ内で入力した設定情報
+ */
+class CcLog {
+    constructor(callbackFunc) {
+        this.logs = {
+            ccLogs: [],
+        };
+        this.getCcLog = (recordedAt) => {
+            return this.logs.ccLogs.find((x) => x.recordedStAt === recordedAt);
+        };
+        this.getCcLogs = () => {
+            return this.logs.ccLogs;
+        };
+        this.setCcLogs = (ccLogs) => {
+            this.logs.ccLogs = ccLogs;
+            this.callbackFuncChange(this.logs.ccLogs);
+        };
+        this.addCcLog = (ccLog) => {
+            this.logs.ccLogs.push(ccLog);
+            this.callbackFuncChange(this.logs.ccLogs);
+        };
+        this.deleteCcLog = (recordedAt) => {
+            this.logs.ccLogs = this.logs.ccLogs.filter((x) => x.recordedStAt !== recordedAt);
+            this.callbackFuncChange(this.logs.ccLogs);
+        };
+        this.saveCcLogs = () => {
+            (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.setStorage)("ccLogs", this.logs.ccLogs);
+        };
+        this.loadCcLogs = async () => {
+            var _a;
+            this.setCcLogs((_a = (await (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.getStorage)("ccLogs"))) !== null && _a !== void 0 ? _a : []);
+        };
+        this.observeGoogleStorage = () => {
+            (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.addListener)((message) => {
+                const data = JSON.parse(message);
+                const logs = this.logs;
+                if ("ccLogs" in data) {
+                    logs.ccLogs = data.ccLogs;
+                }
+                this.setCcLogs(logs.ccLogs);
+            });
+        };
+        this.callbackFuncChange = callbackFunc;
+    }
+}
+
+
+/***/ }),
+
 /***/ "./src/core/chromeStorage.ts":
 /*!***********************************!*\
   !*** ./src/core/chromeStorage.ts ***!
@@ -242,28 +304,39 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "run": () => (/* binding */ run)
 /* harmony export */ });
-/* harmony import */ var _core_config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/core/config */ "./src/core/config.ts");
-/* harmony import */ var _popup_elements__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/popup/elements */ "./src/popup/elements.ts");
-/* harmony import */ var _core_chromeStorage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/core/chromeStorage */ "./src/core/chromeStorage.ts");
+/* harmony import */ var _core_ccLog__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/core/ccLog */ "./src/core/ccLog.ts");
+/* harmony import */ var _core_config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/core/config */ "./src/core/config.ts");
+/* harmony import */ var _popup_elements__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/popup/elements */ "./src/popup/elements.ts");
+/* harmony import */ var _core_chromeStorage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/core/chromeStorage */ "./src/core/chromeStorage.ts");
+
 
 
 
 const run = async () => {
     console.log("start: popup");
     // config読み込み
-    const config = new _core_config__WEBPACK_IMPORTED_MODULE_0__.Config((config) => { });
+    const config = new _core_config__WEBPACK_IMPORTED_MODULE_1__.Config((config) => { });
     await config.loadConfig();
     const configData = config.getConfig();
     console.log(`load config: ${JSON.stringify(configData)}`);
+    // log変更時のコールバック関数
+    const callbackFuncChangeCcLogs = (ccLogs) => {
+        console.log("mutate: ccLogs");
+        // テーブルのdomを更新する。
+        console.log(JSON.stringify(ccLogs));
+    };
+    const ccLog = new _core_ccLog__WEBPACK_IMPORTED_MODULE_0__.CcLog(callbackFuncChangeCcLogs);
+    await ccLog.loadCcLogs();
+    ccLog.observeGoogleStorage();
     // elementsの変更後のコールバック関数
     const callbackFuncChangeElement = (formatType) => {
         // configとストレージを更新
         console.log("changeElement");
         configData.formatType = formatType;
-        (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_2__.setStorage)("formatType", formatType);
-        (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_2__.sendContents)(configData);
+        (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_3__.setStorage)("formatType", formatType);
+        (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_3__.sendContents)(configData);
     };
-    const elements = new _popup_elements__WEBPACK_IMPORTED_MODULE_1__.Elements(configData.formatType, callbackFuncChangeElement);
+    const elements = new _popup_elements__WEBPACK_IMPORTED_MODULE_2__.Elements(configData.formatType, callbackFuncChangeElement);
 };
 window.addEventListener("load", run, false);
 
