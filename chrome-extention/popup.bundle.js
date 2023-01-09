@@ -21754,6 +21754,32 @@ class Config {
 
 /***/ }),
 
+/***/ "./src/core/date.ts":
+/*!**************************!*\
+  !*** ./src/core/date.ts ***!
+  \**************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "format": () => (/* binding */ format),
+/* harmony export */   "getMoment": () => (/* binding */ getMoment)
+/* harmony export */ });
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
+
+moment__WEBPACK_IMPORTED_MODULE_0___default().locale("ja");
+const getMoment = () => {
+    return moment__WEBPACK_IMPORTED_MODULE_0___default()();
+};
+const format = (milliSeconds, format) => {
+    return moment__WEBPACK_IMPORTED_MODULE_0___default()(milliSeconds).format(format);
+};
+
+
+/***/ }),
+
 /***/ "./src/core/utility.ts":
 /*!*****************************!*\
   !*** ./src/core/utility.ts ***!
@@ -21891,8 +21917,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/core/chromeStorage */ "./src/core/chromeStorage.ts");
 /* harmony import */ var _core_utility__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/core/utility */ "./src/core/utility.ts");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _core_date__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/core/date */ "./src/core/date.ts");
 
 
 
@@ -21917,7 +21942,7 @@ class LogTableElement {
                 trElement.className = "align-middle";
                 // 日付
                 const thRecoredAtElement = document.createElement("th");
-                thRecoredAtElement.textContent = moment__WEBPACK_IMPORTED_MODULE_2___default()(ccLog.recordedStAt).format("YYYY-MM-DD HH:mm:ss");
+                thRecoredAtElement.textContent = (0,_core_date__WEBPACK_IMPORTED_MODULE_2__.format)(ccLog.recordedStAt, "YYYY-MM-DD HH:mm:ss");
                 trElement.appendChild(thRecoredAtElement);
                 // 参加者
                 const nameList = Object.keys((0,_core_utility__WEBPACK_IMPORTED_MODULE_1__.groupByObject)(ccLog.speeches, (r) => r.name));
@@ -21969,7 +21994,6 @@ class LogTableElement {
             });
         };
         this.callbackFuncClickOutPut = callbackFunc;
-        moment__WEBPACK_IMPORTED_MODULE_2___default().locale("ja");
         this.setTbodyElementValue(ccLogs);
         this.observeGoogleStorage();
     }

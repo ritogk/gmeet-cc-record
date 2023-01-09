@@ -4,6 +4,7 @@ import { CcLog, CcLogObjectInterface } from "@/core/ccLog"
 import { setStorage, getStorage } from "@/core/chromeStorage"
 import { diff_match_patch } from "diff-match-patch"
 import { copyObject } from "@/core/utility"
+import { getMoment } from "@/core/date"
 
 export const main = async (): Promise<void> => {
   console.log("start: application")
@@ -40,11 +41,11 @@ export const main = async (): Promise<void> => {
       ccOveserver.run()
       console.log("start: observer")
       log.logRecorded = true
-      log.ccLog.recordedStAt = new Date().getTime()
+      log.ccLog.recordedStAt = getMoment().valueOf()
     } else {
       ccOveserver.stop()
       log.ccLog.speeches.push(log.beforeSpeach)
-      log.ccLog.recordedEdAt = new Date().getTime()
+      log.ccLog.recordedEdAt = getMoment().valueOf()
       log.ccLog.speeches = log.ccLog.speeches.slice(1)
       log.ccLog.id = ccLog.generateCcLogId()
       const storage = await getStorage<CcLogObjectInterface[]>("ccLogs")
@@ -103,7 +104,7 @@ export const main = async (): Promise<void> => {
         log.ccLog.speeches.push({
           name: log.beforeSpeach.name,
           speach: log.beforeSpeach.speach,
-          recordedAt: new Date().getTime(),
+          recordedAt: getMoment().valueOf(),
         })
         originalSpeach = speach
       }
@@ -111,7 +112,7 @@ export const main = async (): Promise<void> => {
       log.beforeSpeach = {
         name: name,
         speach: originalSpeach,
-        recordedAt: new Date().getTime(),
+        recordedAt: getMoment().valueOf(),
       }
     }
   }

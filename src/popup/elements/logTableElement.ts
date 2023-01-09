@@ -2,7 +2,7 @@ import { FormatType } from "@/core/config"
 import { CcLogObjectInterface } from "@/core/ccLog"
 import { setStorage, getStorage } from "@/core/chromeStorage"
 import { groupByObject } from "@/core/utility"
-import moment from "moment"
+import { format } from "@/core/date"
 
 interface logTableElementInterface {
   getElement(): HTMLTableElement
@@ -20,7 +20,6 @@ export class LogTableElement implements logTableElementInterface {
     ccLogs: CcLogObjectInterface[]
   ) {
     this.callbackFuncClickOutPut = callbackFunc
-    moment.locale("ja")
     this.setTbodyElementValue(ccLogs)
     this.observeGoogleStorage()
   }
@@ -49,7 +48,8 @@ export class LogTableElement implements logTableElementInterface {
       trElement.className = "align-middle"
       // 日付
       const thRecoredAtElement = document.createElement("th")
-      thRecoredAtElement.textContent = moment(ccLog.recordedStAt).format(
+      thRecoredAtElement.textContent = format(
+        ccLog.recordedStAt,
         "YYYY-MM-DD HH:mm:ss"
       )
       trElement.appendChild(thRecoredAtElement)
