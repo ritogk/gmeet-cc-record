@@ -21854,7 +21854,7 @@ class CcLogFormatter {
         };
         this.ccLog = ccLog;
     }
-    getFormatedText() {
+    getFormatedRaw() {
         let formatedText = "";
         this.ccLog.speeches.forEach((x) => {
             const row = `${x.recordedAt},${x.name},${x.speach}\n`;
@@ -22176,7 +22176,7 @@ const run = async () => {
         if (!ccLog)
             return;
         const ccLogFormatter = new _popup_ccLogFormatter__WEBPACK_IMPORTED_MODULE_5__.CcLogFormatter(ccLog);
-        const fomatedText = ccLogFormatter.getFormatedText();
+        const fomatedText = ccLogFormatter.getFormatedRaw();
         const fileName = (0,_core_date__WEBPACK_IMPORTED_MODULE_6__.format)(ccLog.recordedStAt, "YYYYMMDDHHmmss") + ".csv";
         (0,_core_utility__WEBPACK_IMPORTED_MODULE_7__.downloadTextFile)(fomatedText, fileName);
     };

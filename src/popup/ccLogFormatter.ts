@@ -1,7 +1,7 @@
 import { CcLogObjectInterface } from "@/core/ccLog"
 // ストラテジパターンやってみたい。
 interface ccLogFormatterInterface {
-  getFormatedText(): string
+  getFormatedRaw(): string
 }
 
 export class CcLogFormatter implements ccLogFormatterInterface {
@@ -14,7 +14,7 @@ export class CcLogFormatter implements ccLogFormatterInterface {
   constructor(ccLog: CcLogObjectInterface) {
     this.ccLog = ccLog
   }
-  getFormatedText(): string {
+  getFormatedRaw(): string {
     let formatedText = ""
     this.ccLog.speeches.forEach((x) => {
       const row = `${x.recordedAt},${x.name},${x.speach}\n`
