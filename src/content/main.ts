@@ -4,7 +4,7 @@ import { CcLog, CcLogObjectInterface } from "@/core/ccLog"
 import { setStorage, getStorage } from "@/core/chromeStorage"
 import { diff_match_patch } from "diff-match-patch"
 import { copyObject } from "@/core/utility"
-import { getMoment } from "@/core/date"
+import { getMoment } from "@/core/time"
 
 export const main = async (): Promise<void> => {
   console.log("start: application")

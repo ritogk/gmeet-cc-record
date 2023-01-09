@@ -24087,7 +24087,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var diff_match_patch__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! diff-match-patch */ "./node_modules/diff-match-patch/index.js");
 /* harmony import */ var diff_match_patch__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(diff_match_patch__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _core_utility__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/core/utility */ "./src/core/utility.ts");
-/* harmony import */ var _core_date__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/core/date */ "./src/core/date.ts");
+/* harmony import */ var _core_time__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/core/time */ "./src/core/time.ts");
 
 
 
@@ -24123,12 +24123,12 @@ const main = async () => {
             ccOveserver.run();
             console.log("start: observer");
             log.logRecorded = true;
-            log.ccLog.recordedStAt = (0,_core_date__WEBPACK_IMPORTED_MODULE_6__.getMoment)().valueOf();
+            log.ccLog.recordedStAt = (0,_core_time__WEBPACK_IMPORTED_MODULE_6__.getMoment)().valueOf();
         }
         else {
             ccOveserver.stop();
             log.ccLog.speeches.push(log.beforeSpeach);
-            log.ccLog.recordedEdAt = (0,_core_date__WEBPACK_IMPORTED_MODULE_6__.getMoment)().valueOf();
+            log.ccLog.recordedEdAt = (0,_core_time__WEBPACK_IMPORTED_MODULE_6__.getMoment)().valueOf();
             log.ccLog.speeches = log.ccLog.speeches.slice(1);
             log.ccLog.id = ccLog.generateCcLogId();
             const storage = await (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_3__.getStorage)("ccLogs");
@@ -24184,14 +24184,14 @@ const main = async () => {
                 log.ccLog.speeches.push({
                     name: log.beforeSpeach.name,
                     speach: log.beforeSpeach.speach,
-                    recordedAt: (0,_core_date__WEBPACK_IMPORTED_MODULE_6__.getMoment)().valueOf(),
+                    recordedAt: (0,_core_time__WEBPACK_IMPORTED_MODULE_6__.getMoment)().valueOf(),
                 });
                 originalSpeach = speach;
             }
             log.beforeSpeach = {
                 name: name,
                 speach: originalSpeach,
-                recordedAt: (0,_core_date__WEBPACK_IMPORTED_MODULE_6__.getMoment)().valueOf(),
+                recordedAt: (0,_core_time__WEBPACK_IMPORTED_MODULE_6__.getMoment)().valueOf(),
             };
         }
     };
@@ -24317,9 +24317,9 @@ const setStorage = (key, value) => {
 
 /***/ }),
 
-/***/ "./src/core/date.ts":
+/***/ "./src/core/time.ts":
 /*!**************************!*\
-  !*** ./src/core/date.ts ***!
+  !*** ./src/core/time.ts ***!
   \**************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 

@@ -1,7 +1,7 @@
 import { CcLogObjectInterface } from "@/core/ccLog"
 import { setStorage, getStorage } from "@/core/chromeStorage"
 import { groupByObject } from "@/core/utility"
-import { format } from "@/core/date"
+import { format } from "@/core/time"
 
 interface logTableElementInterface {
   getElement(): HTMLTableElement

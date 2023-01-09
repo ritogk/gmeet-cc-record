@@ -1,6 +1,6 @@
 import { CcLogObjectInterface } from "@/core/ccLog"
 import { FormatterInterface } from "@/core/ccLogFormatter/formatterInterface"
-import { format } from "@/core/date"
+import { format } from "@/core/time"
 export class MarkDownFormatter implements FormatterInterface {
   private ccLog: CcLogObjectInterface = {
     id: 0,

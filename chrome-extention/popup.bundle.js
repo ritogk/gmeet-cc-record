@@ -21709,7 +21709,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "MarkDownFormatter": () => (/* binding */ MarkDownFormatter)
 /* harmony export */ });
-/* harmony import */ var _core_date__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/core/date */ "./src/core/date.ts");
+/* harmony import */ var _core_time__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/core/time */ "./src/core/time.ts");
 
 class MarkDownFormatter {
     constructor(ccLog) {
@@ -21728,7 +21728,7 @@ class MarkDownFormatter {
             return formatedText;
         };
         this.getFileName = () => {
-            return (0,_core_date__WEBPACK_IMPORTED_MODULE_0__.format)(this.ccLog.recordedStAt, "YYYYMMDDHHmmss") + ".md";
+            return (0,_core_time__WEBPACK_IMPORTED_MODULE_0__.format)(this.ccLog.recordedStAt, "YYYYMMDDHHmmss") + ".md";
         };
         this.ccLog = ccLog;
     }
@@ -21748,7 +21748,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "RawFormatter": () => (/* binding */ RawFormatter)
 /* harmony export */ });
-/* harmony import */ var _core_date__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/core/date */ "./src/core/date.ts");
+/* harmony import */ var _core_time__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/core/time */ "./src/core/time.ts");
 
 class RawFormatter {
     constructor(ccLog) {
@@ -21767,7 +21767,7 @@ class RawFormatter {
             return formatedText;
         };
         this.getFileName = () => {
-            return (0,_core_date__WEBPACK_IMPORTED_MODULE_0__.format)(this.ccLog.recordedStAt, "YYYYMMDDHHmmss") + ".txt";
+            return (0,_core_time__WEBPACK_IMPORTED_MODULE_0__.format)(this.ccLog.recordedStAt, "YYYYMMDDHHmmss") + ".txt";
         };
         this.ccLog = ccLog;
     }
@@ -21857,9 +21857,9 @@ class Config {
 
 /***/ }),
 
-/***/ "./src/core/date.ts":
+/***/ "./src/core/time.ts":
 /*!**************************!*\
-  !*** ./src/core/date.ts ***!
+  !*** ./src/core/time.ts ***!
   \**************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -22000,7 +22000,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/core/chromeStorage */ "./src/core/chromeStorage.ts");
 /* harmony import */ var _core_utility__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/core/utility */ "./src/core/utility.ts");
-/* harmony import */ var _core_date__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/core/date */ "./src/core/date.ts");
+/* harmony import */ var _core_time__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/core/time */ "./src/core/time.ts");
 
 
 
@@ -22025,7 +22025,7 @@ class LogTableElement {
                 trElement.className = "align-middle";
                 // 日付
                 const thRecoredAtElement = document.createElement("th");
-                thRecoredAtElement.textContent = (0,_core_date__WEBPACK_IMPORTED_MODULE_2__.format)(ccLog.recordedStAt, "YYYY-MM-DD HH:mm:ss");
+                thRecoredAtElement.textContent = (0,_core_time__WEBPACK_IMPORTED_MODULE_2__.format)(ccLog.recordedStAt, "YYYY-MM-DD HH:mm:ss");
                 trElement.appendChild(thRecoredAtElement);
                 // 参加者
                 const nameList = Object.keys((0,_core_utility__WEBPACK_IMPORTED_MODULE_1__.groupByObject)(ccLog.speeches, (r) => r.name));
