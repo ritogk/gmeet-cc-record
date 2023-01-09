@@ -36,9 +36,10 @@ class CcLog {
             this.logs.ccLogs.push(ccLog);
             this.callbackFuncChange(this.logs.ccLogs);
         };
-        this.deleteCcLog = (recordedAt) => {
-            this.logs.ccLogs = this.logs.ccLogs.filter((x) => x.recordedStAt !== recordedAt);
-            this.callbackFuncChange(this.logs.ccLogs);
+        this.deleteCcLog = (id) => {
+            const ccLogs = this.logs.ccLogs.filter((x) => x.id !== id);
+            this.setCcLogs(ccLogs);
+            (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.setStorage)("ccLogs", ccLogs);
         };
         this.saveCcLogs = () => {
             (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.setStorage)("ccLogs", this.logs.ccLogs);
@@ -53,6 +54,12 @@ class CcLog {
                     this.setCcLogs(changes.ccLogs.newValue);
                 }
             });
+        };
+        this.generateCcLogId = () => {
+            if (this.logs.ccLogs.length === 0) {
+                return 1;
+            }
+            return Math.max(...this.logs.ccLogs.map((x) => x.id)) + 1;
         };
         this.callbackFuncChange = callbackFunc;
     }
@@ -191,6 +198,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _core_config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/core/config */ "./src/core/config.ts");
 /* harmony import */ var _core_utility__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/core/utility */ "./src/core/utility.ts");
+/* harmony import */ var _core_ccLog__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/core/ccLog */ "./src/core/ccLog.ts");
+
 
 
 class Elements {
@@ -254,6 +263,10 @@ class Elements {
                 const outputButtonElement = document.createElement("button");
                 outputButtonElement.textContent = "出力";
                 outputButtonElement.className = "btn btn-primary btn-sm";
+                outputButtonElement.value = ccLog.id.toString();
+                outputButtonElement.addEventListener("click", (event) => {
+                    console.log(event.target.value);
+                });
                 tdOutPutButtonElement.appendChild(outputButtonElement);
                 trElement.appendChild(tdOutPutButtonElement);
                 // 削除ボタン
@@ -261,6 +274,14 @@ class Elements {
                 const deleteButtonElement = document.createElement("button");
                 deleteButtonElement.textContent = "削除";
                 deleteButtonElement.className = "btn btn-danger btn-sm";
+                deleteButtonElement.value = ccLog.id.toString();
+                deleteButtonElement.addEventListener("click", async (event) => {
+                    debugger;
+                    console.log(event.target.value);
+                    const ccLog = new _core_ccLog__WEBPACK_IMPORTED_MODULE_2__.CcLog((ccLogs) => { });
+                    await ccLog.loadCcLogs();
+                    ccLog.deleteCcLog(Number(event.target.value));
+                });
                 tdDeleteButtonElement.appendChild(deleteButtonElement);
                 trElement.appendChild(tdDeleteButtonElement);
                 tbodyElement.appendChild(trElement);

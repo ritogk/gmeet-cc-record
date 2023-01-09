@@ -2514,9 +2514,10 @@ class CcLog {
             this.logs.ccLogs.push(ccLog);
             this.callbackFuncChange(this.logs.ccLogs);
         };
-        this.deleteCcLog = (recordedAt) => {
-            this.logs.ccLogs = this.logs.ccLogs.filter((x) => x.recordedStAt !== recordedAt);
-            this.callbackFuncChange(this.logs.ccLogs);
+        this.deleteCcLog = (id) => {
+            const ccLogs = this.logs.ccLogs.filter((x) => x.id !== id);
+            this.setCcLogs(ccLogs);
+            (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.setStorage)("ccLogs", ccLogs);
         };
         this.saveCcLogs = () => {
             (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.setStorage)("ccLogs", this.logs.ccLogs);
@@ -2531,6 +2532,12 @@ class CcLog {
                     this.setCcLogs(changes.ccLogs.newValue);
                 }
             });
+        };
+        this.generateCcLogId = () => {
+            if (this.logs.ccLogs.length === 0) {
+                return 1;
+            }
+            return Math.max(...this.logs.ccLogs.map((x) => x.id)) + 1;
         };
         this.callbackFuncChange = callbackFunc;
     }
@@ -2702,8 +2709,10 @@ const main = async () => {
         console.log("mutate: ccLogs");
     };
     const ccLog = new _core_ccLog__WEBPACK_IMPORTED_MODULE_2__.CcLog(callbackFuncChangeCcLogs);
+    ccLog.observeGoogleStorage();
     await ccLog.loadCcLogs();
     const defaultLog = {
+        id: 0,
         recordedStAt: 0,
         recordedEdAt: 0,
         speeches: [],
@@ -2730,12 +2739,13 @@ const main = async () => {
             log.ccLog.speeches.push(log.beforeSpeach);
             log.ccLog.recordedEdAt = new Date().getTime();
             log.ccLog.speeches = log.ccLog.speeches.slice(1);
+            log.ccLog.id = ccLog.generateCcLogId();
             const storage = await (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_3__.getStorage)("ccLogs");
             if (storage === null) {
-                (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_3__.setStorage)("ccLogs", []);
+                (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_3__.setStorage)("ccLogs", [log.ccLog]);
             }
             else {
-                storage.push(log.ccLog);
+                log.ccLog.id = storage.push(log.ccLog);
                 (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_3__.setStorage)("ccLogs", storage);
             }
             console.log(log.ccLog);

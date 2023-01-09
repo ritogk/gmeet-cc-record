@@ -15,8 +15,10 @@ export const main = async (): Promise<void> => {
   }
 
   const ccLog = new CcLog(callbackFuncChangeCcLogs)
+  ccLog.observeGoogleStorage()
   await ccLog.loadCcLogs()
   const defaultLog: CcLogObjectInterface = {
+    id: 0,
     recordedStAt: 0,
     recordedEdAt: 0,
     speeches: [],
@@ -44,11 +46,12 @@ export const main = async (): Promise<void> => {
       log.ccLog.speeches.push(log.beforeSpeach)
       log.ccLog.recordedEdAt = new Date().getTime()
       log.ccLog.speeches = log.ccLog.speeches.slice(1)
+      log.ccLog.id = ccLog.generateCcLogId()
       const storage = await getStorage<CcLogObjectInterface[]>("ccLogs")
       if (storage === null) {
-        setStorage("ccLogs", [])
+        setStorage("ccLogs", [log.ccLog])
       } else {
-        storage.push(log.ccLog)
+        log.ccLog.id = storage.push(log.ccLog)
         setStorage("ccLogs", storage)
       }
 

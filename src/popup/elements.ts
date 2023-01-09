@@ -2,6 +2,8 @@ import { FormatType } from "@/core/config"
 import { CcLogObjectInterface } from "@/core/ccLog"
 import { groupByObject } from "@/core/utility"
 
+import { CcLog } from "@/core/ccLog"
+
 export interface ElementsType {
   logTable: HTMLTableElement | null
   formatType: NodeListOf<HTMLInputElement> | null
@@ -94,7 +96,6 @@ export class Elements {
 
   setLogTableElement = (ccLogs: CcLogObjectInterface[]): void => {
     document.getElementById("logTableData")?.remove()
-
     const tbodyElement = document.createElement("tbody")
     tbodyElement.id = "logTableData"
     ccLogs.forEach((ccLog) => {
@@ -118,6 +119,10 @@ export class Elements {
       const outputButtonElement = document.createElement("button")
       outputButtonElement.textContent = "出力"
       outputButtonElement.className = "btn btn-primary btn-sm"
+      outputButtonElement.value = ccLog.id.toString()
+      outputButtonElement.addEventListener("click", (event: any): void => {
+        console.log(event.target.value)
+      })
       tdOutPutButtonElement.appendChild(outputButtonElement)
       trElement.appendChild(tdOutPutButtonElement)
       // 削除ボタン
@@ -125,6 +130,17 @@ export class Elements {
       const deleteButtonElement = document.createElement("button")
       deleteButtonElement.textContent = "削除"
       deleteButtonElement.className = "btn btn-danger btn-sm"
+      deleteButtonElement.value = ccLog.id.toString()
+      deleteButtonElement.addEventListener(
+        "click",
+        async (event: any): Promise<void> => {
+          debugger
+          console.log(event.target.value)
+          const ccLog = new CcLog((ccLogs: CcLogObjectInterface[]): void => {})
+          await ccLog.loadCcLogs()
+          ccLog.deleteCcLog(Number(event.target.value))
+        }
+      )
       tdDeleteButtonElement.appendChild(deleteButtonElement)
       trElement.appendChild(tdDeleteButtonElement)
 

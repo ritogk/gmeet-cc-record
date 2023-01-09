@@ -5,8 +5,9 @@ export interface CcLogInterface {
   getCcLogs(): CcLogObjectInterface[]
   getCcLog(date: number): CcLogObjectInterface | undefined
   addCcLog(ccLog: CcLogObjectInterface): void
-  deleteCcLog(date: number): void
+  deleteCcLog(id: number): void
   observeGoogleStorage(): void
+  generateCcLogId(): number
 }
 
 export interface LogObjectInterface {
@@ -14,6 +15,7 @@ export interface LogObjectInterface {
 }
 
 export interface CcLogObjectInterface {
+  id: number
   recordedStAt: number
   recordedEdAt: number
   speeches: { name: string; speach: string; recordedAt: number }[]
@@ -50,11 +52,10 @@ export class CcLog implements CcLogInterface {
     this.callbackFuncChange(this.logs.ccLogs)
   }
 
-  deleteCcLog = (recordedAt: number): void => {
-    this.logs.ccLogs = this.logs.ccLogs.filter(
-      (x) => x.recordedStAt !== recordedAt
-    )
-    this.callbackFuncChange(this.logs.ccLogs)
+  deleteCcLog = (id: number): void => {
+    const ccLogs = this.logs.ccLogs.filter((x) => x.id !== id)
+    this.setCcLogs(ccLogs)
+    setStorage("ccLogs", ccLogs)
   }
 
   saveCcLogs = (): void => {
@@ -71,5 +72,12 @@ export class CcLog implements CcLogInterface {
         this.setCcLogs(changes.ccLogs.newValue)
       }
     })
+  }
+
+  generateCcLogId = (): number => {
+    if (this.logs.ccLogs.length === 0) {
+      return 1
+    }
+    return Math.max(...this.logs.ccLogs.map((x) => x.id)) + 1
   }
 }
