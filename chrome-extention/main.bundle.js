@@ -24159,9 +24159,7 @@ class CcLog {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "addListener": () => (/* binding */ addListener),
 /* harmony export */   "getStorage": () => (/* binding */ getStorage),
-/* harmony export */   "sendContents": () => (/* binding */ sendContents),
 /* harmony export */   "setStorage": () => (/* binding */ setStorage)
 /* harmony export */ });
 const getStorage = async (key) => {
@@ -24175,15 +24173,6 @@ const getStorage = async (key) => {
 };
 const setStorage = (key, value) => {
     chrome.storage.local.set({ [key]: value });
-};
-const sendContents = (config) => {
-    console.log(`send active tab: ${config}`);
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, JSON.stringify(config), function (response) { });
-    });
-};
-const addListener = (callbackFunc) => {
-    chrome.runtime.onMessage.addListener(callbackFunc);
 };
 
 
@@ -24363,9 +24352,7 @@ __webpack_require__.r(__webpack_exports__);
 const main = async () => {
     console.log("start: application");
     const diffMatchPatch = new diff_match_patch__WEBPACK_IMPORTED_MODULE_4__.diff_match_patch();
-    const callbackFuncChangeCcLogs = (ccLogs) => {
-        console.log("mutate: ccLogs");
-    };
+    const callbackFuncChangeCcLogs = (ccLogs) => { };
     const ccLog = new _core_ccLog__WEBPACK_IMPORTED_MODULE_2__.CcLog(callbackFuncChangeCcLogs);
     ccLog.observeGoogleStorage();
     await ccLog.loadCcLogs();

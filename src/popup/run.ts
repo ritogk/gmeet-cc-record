@@ -1,6 +1,6 @@
 import { CcLog, CcLogObjectInterface } from "@/core/ccLog"
 import { Config, ConfigObjectInterface, FormatType } from "@/core/config"
-import { setStorage, sendContents } from "@/core/chromeStorage"
+import { setStorage } from "@/core/chromeStorage"
 import { FormatTypeElement } from "@/popup/elements/formatTypeElement"
 import { LogTableElement } from "@/popup/elements/logTableElement"
 import { CcLogFormatter } from "@/popup/ccLogFormatter"
@@ -22,7 +22,6 @@ export const run = async (): Promise<void> => {
     console.log("changeElement")
     configData.formatType = formatType
     setStorage("formatType", formatType)
-    sendContents(configData)
   }
 
   const formatTypeElement = new FormatTypeElement(configData.formatType)

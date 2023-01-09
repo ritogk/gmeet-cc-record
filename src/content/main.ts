@@ -11,10 +11,7 @@ export const main = async (): Promise<void> => {
 
   const diffMatchPatch = new diff_match_patch()
 
-  const callbackFuncChangeCcLogs = (ccLogs: CcLogObjectInterface[]): void => {
-    console.log("mutate: ccLogs")
-  }
-
+  const callbackFuncChangeCcLogs = (ccLogs: CcLogObjectInterface[]): void => {}
   const ccLog = new CcLog(callbackFuncChangeCcLogs)
   ccLog.observeGoogleStorage()
   await ccLog.loadCcLogs()

@@ -1,4 +1,4 @@
-import { getStorage, addListener, setStorage } from "@/core/chromeStorage"
+import { getStorage, setStorage } from "@/core/chromeStorage"
 export interface CcLogInterface {
   loadCcLogs(): Promise<void>
   setCcLogs(ccLogs: CcLogObjectInterface[]): void
