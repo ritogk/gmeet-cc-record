@@ -2,6 +2,7 @@ import { FormatType } from "@/core/config"
 import { CcLogObjectInterface } from "@/core/ccLog"
 import { setStorage, getStorage } from "@/core/chromeStorage"
 import { groupByObject } from "@/core/utility"
+import moment from "moment"
 
 interface logTableElementInterface {
   getElement(): HTMLTableElement
@@ -12,6 +13,7 @@ interface logTableElementInterface {
 
 export class LogTableElement implements logTableElementInterface {
   constructor(ccLogs: CcLogObjectInterface[]) {
+    moment.locale("ja")
     this.setTbodyElementValue(ccLogs)
     this.observeGoogleStorage()
   }
@@ -40,7 +42,9 @@ export class LogTableElement implements logTableElementInterface {
       trElement.className = "align-middle"
       // 日付
       const thRecoredAtElement = document.createElement("th")
-      thRecoredAtElement.textContent = ccLog.recordedStAt.toString()
+      thRecoredAtElement.textContent = moment(ccLog.recordedStAt).format(
+        "YYYY-MM-DD HH:mm:ss"
+      )
       trElement.appendChild(thRecoredAtElement)
       // 参加者
       const nameList = Object.keys(groupByObject(ccLog.speeches, (r) => r.name))
