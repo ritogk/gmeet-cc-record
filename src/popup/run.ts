@@ -5,6 +5,7 @@ import { setStorage, sendContents } from "@/core/chromeStorage"
 import { FormatTypeElement } from "@/popup/elements/formatTypeElement"
 import { LogTableElement } from "@/popup/elements/logTableElement"
 import { CcLogFormatter } from "@/popup/ccLogFormatter"
+import { format } from "@/core/date"
 
 export const run = async (): Promise<void> => {
   console.log("start: popup")
@@ -53,7 +54,7 @@ export const run = async (): Promise<void> => {
     const aTag = document.createElement("a")
     aTag.href = URL.createObjectURL(blob)
     aTag.target = "_blank"
-    aTag.download = ccLog.recordedStAt.toString()
+    aTag.download = format(ccLog.recordedStAt, "YYYYMMDDHHmmss")
     aTag.click()
     URL.revokeObjectURL(aTag.href)
   }
@@ -61,6 +62,8 @@ export const run = async (): Promise<void> => {
     callbackFuncClickOutPut,
     ccLog.getCcLogs()
   )
+
+  console.log(ccLog.getCcLogs())
 }
 
 window.addEventListener("load", run, false)

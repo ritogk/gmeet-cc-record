@@ -21763,6 +21763,7 @@ class Config {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "convertMoment": () => (/* binding */ convertMoment),
 /* harmony export */   "format": () => (/* binding */ format),
 /* harmony export */   "getMoment": () => (/* binding */ getMoment)
 /* harmony export */ });
@@ -21772,6 +21773,9 @@ __webpack_require__.r(__webpack_exports__);
 moment__WEBPACK_IMPORTED_MODULE_0___default().locale("ja");
 const getMoment = () => {
     return moment__WEBPACK_IMPORTED_MODULE_0___default()();
+};
+const convertMoment = (time) => {
+    return moment__WEBPACK_IMPORTED_MODULE_0___default()(time);
 };
 const format = (milliSeconds, format) => {
     return moment__WEBPACK_IMPORTED_MODULE_0___default()(milliSeconds).format(format);
@@ -22102,9 +22106,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _popup_elements_formatTypeElement__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/popup/elements/formatTypeElement */ "./src/popup/elements/formatTypeElement.ts");
 /* harmony import */ var _popup_elements_logTableElement__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/popup/elements/logTableElement */ "./src/popup/elements/logTableElement.ts");
 /* harmony import */ var _popup_ccLogFormatter__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/popup/ccLogFormatter */ "./src/popup/ccLogFormatter.ts");
+/* harmony import */ var _core_date__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/core/date */ "./src/core/date.ts");
 
 
 // import { Elements } from "@/popup/elements"
+
 
 
 
@@ -22151,11 +22157,12 @@ const run = async () => {
         const aTag = document.createElement("a");
         aTag.href = URL.createObjectURL(blob);
         aTag.target = "_blank";
-        aTag.download = ccLog.recordedStAt.toString();
+        aTag.download = (0,_core_date__WEBPACK_IMPORTED_MODULE_6__.format)(ccLog.recordedStAt, "YYYYMMDDHHmmss");
         aTag.click();
         URL.revokeObjectURL(aTag.href);
     };
     const logTableElement = new _popup_elements_logTableElement__WEBPACK_IMPORTED_MODULE_4__.LogTableElement(callbackFuncClickOutPut, ccLog.getCcLogs());
+    console.log(ccLog.getCcLogs());
 };
 window.addEventListener("load", run, false);
 

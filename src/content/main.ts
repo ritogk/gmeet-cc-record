@@ -52,7 +52,7 @@ export const main = async (): Promise<void> => {
       if (storage === null) {
         setStorage("ccLogs", [log.ccLog])
       } else {
-        log.ccLog.id = storage.push(log.ccLog)
+        storage.push(log.ccLog)
         setStorage("ccLogs", storage)
       }
 

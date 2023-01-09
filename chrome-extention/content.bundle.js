@@ -24138,7 +24138,7 @@ const main = async () => {
                 (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_3__.setStorage)("ccLogs", [log.ccLog]);
             }
             else {
-                log.ccLog.id = storage.push(log.ccLog);
+                storage.push(log.ccLog);
                 (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_3__.setStorage)("ccLogs", storage);
             }
             console.log(log.ccLog);
@@ -24322,6 +24322,7 @@ const addListener = (callbackFunc) => {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "convertMoment": () => (/* binding */ convertMoment),
 /* harmony export */   "format": () => (/* binding */ format),
 /* harmony export */   "getMoment": () => (/* binding */ getMoment)
 /* harmony export */ });
@@ -24331,6 +24332,9 @@ __webpack_require__.r(__webpack_exports__);
 moment__WEBPACK_IMPORTED_MODULE_0___default().locale("ja");
 const getMoment = () => {
     return moment__WEBPACK_IMPORTED_MODULE_0___default()();
+};
+const convertMoment = (time) => {
+    return moment__WEBPACK_IMPORTED_MODULE_0___default()(time);
 };
 const format = (milliSeconds, format) => {
     return moment__WEBPACK_IMPORTED_MODULE_0___default()(milliSeconds).format(format);
