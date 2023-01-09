@@ -1,5 +1,5 @@
 import { FormatterInterface } from "@/core/ccLogFormatter/formatterInterface"
-// ストラテジパターンやってみたい。
+
 interface ccLogFormatterInterface {
   getFormattedText(): string
   getFileName(): string
