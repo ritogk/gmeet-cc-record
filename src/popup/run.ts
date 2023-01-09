@@ -3,8 +3,10 @@ import { Config, ConfigObjectInterface, FormatType } from "@/core/config"
 import { FormatTypeElement } from "@/popup/elements/formatTypeElement"
 import { LogTableElement } from "@/popup/elements/logTableElement"
 import { CcLogFormatter } from "@/core/ccLogFormatter"
-import { format } from "@/core/date"
 import { downloadTextFile } from "@/core/utility"
+import { MarkDownFormatter } from "@/core/ccLogFormatter/markDownFormatter"
+import { RawFormatter } from "@/core/ccLogFormatter/rawFormatter"
+import { FormatterInterface } from "@/core/ccLogFormatter/formatterInterface"
 
 export const run = async (): Promise<void> => {
   console.log("start: popup")
@@ -28,16 +30,15 @@ export const run = async (): Promise<void> => {
   // 出力ボタン押下後のコールバック関数
   const callbackFuncClickOutPut = (ccLog: CcLogObjectInterface | undefined) => {
     if (!ccLog) return
-    const ccLogFormatter = new CcLogFormatter(ccLog)
-    if (formatTypeElement.getSelectElement().value === FormatType.TEXT) {
-      const fomatedText = ccLogFormatter.getFormatedRaw()
-      const fileName = format(ccLog.recordedStAt, "YYYYMMDDHHmmss") + ".txt"
-      downloadTextFile(fomatedText, fileName)
-    } else {
-      const fomatedText = ccLogFormatter.getFormatedMarkdown()
-      const fileName = format(ccLog.recordedStAt, "YYYYMMDDHHmmss") + ".md"
-      downloadTextFile(fomatedText, fileName)
-    }
+    const formatter: FormatterInterface =
+      formatTypeElement.getSelectElement().value === FormatType.TEXT
+        ? new RawFormatter(ccLog)
+        : new MarkDownFormatter(ccLog)
+    const ccLogFormatter = new CcLogFormatter(formatter)
+    downloadTextFile(
+      ccLogFormatter.getFormattedText(),
+      ccLogFormatter.getFileName()
+    )
   }
   const logTableElement = new LogTableElement(
     callbackFuncClickOutPut,

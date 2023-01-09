@@ -1,35 +1,21 @@
-import { CcLogObjectInterface } from "@/core/ccLog"
+import { FormatterInterface } from "@/core/ccLogFormatter/formatterInterface"
 // ストラテジパターンやってみたい。
 interface ccLogFormatterInterface {
-  getFormatedRaw(): string
-  getFormatedMarkdown(): string
+  getFormattedText(): string
+  getFileName(): string
 }
 
 export class CcLogFormatter implements ccLogFormatterInterface {
-  private ccLog: CcLogObjectInterface = {
-    id: 0,
-    recordedEdAt: 0,
-    recordedStAt: 0,
-    speeches: [],
-  }
-  constructor(ccLog: CcLogObjectInterface) {
-    this.ccLog = ccLog
-  }
-  getFormatedRaw = (): string => {
-    let formatedText = ""
-    this.ccLog.speeches.forEach((x) => {
-      const row = `${x.recordedAt},${x.name},${x.speach}\n`
-      formatedText += row
-    })
-    return formatedText
+  private formatter: FormatterInterface
+  constructor(formatter: FormatterInterface) {
+    this.formatter = formatter
   }
 
-  getFormatedMarkdown = (): string => {
-    let formatedText = ""
-    this.ccLog.speeches.forEach((x) => {
-      const row = `\`${x.name}\` ${x.speach}  \n`
-      formatedText += row
-    })
-    return formatedText
+  getFormattedText(): string {
+    return this.formatter.format()
+  }
+
+  getFileName(): string {
+    return this.formatter.getFileName()
   }
 }

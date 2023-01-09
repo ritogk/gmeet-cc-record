@@ -21684,14 +21684,81 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "CcLogFormatter": () => (/* binding */ CcLogFormatter)
 /* harmony export */ });
 class CcLogFormatter {
+    constructor(formatter) {
+        this.formatter = formatter;
+    }
+    getFormattedText() {
+        return this.formatter.format();
+    }
+    getFileName() {
+        return this.formatter.getFileName();
+    }
+}
+
+
+/***/ }),
+
+/***/ "./src/core/ccLogFormatter/markDownFormatter.ts":
+/*!******************************************************!*\
+  !*** ./src/core/ccLogFormatter/markDownFormatter.ts ***!
+  \******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "MarkDownFormatter": () => (/* binding */ MarkDownFormatter)
+/* harmony export */ });
+/* harmony import */ var _core_date__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/core/date */ "./src/core/date.ts");
+
+class MarkDownFormatter {
     constructor(ccLog) {
         this.ccLog = {
             id: 0,
-            recordedEdAt: 0,
             recordedStAt: 0,
+            recordedEdAt: 0,
             speeches: [],
         };
-        this.getFormatedRaw = () => {
+        this.format = () => {
+            let formatedText = "";
+            this.ccLog.speeches.forEach((x) => {
+                const row = `\`${x.name}\` ${x.speach}  \n`;
+                formatedText += row;
+            });
+            return formatedText;
+        };
+        this.getFileName = () => {
+            return (0,_core_date__WEBPACK_IMPORTED_MODULE_0__.format)(this.ccLog.recordedStAt, "YYYYMMDDHHmmss") + ".md";
+        };
+        this.ccLog = ccLog;
+    }
+}
+
+
+/***/ }),
+
+/***/ "./src/core/ccLogFormatter/rawFormatter.ts":
+/*!*************************************************!*\
+  !*** ./src/core/ccLogFormatter/rawFormatter.ts ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "RawFormatter": () => (/* binding */ RawFormatter)
+/* harmony export */ });
+/* harmony import */ var _core_date__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/core/date */ "./src/core/date.ts");
+
+class RawFormatter {
+    constructor(ccLog) {
+        this.ccLog = {
+            id: 0,
+            recordedStAt: 0,
+            recordedEdAt: 0,
+            speeches: [],
+        };
+        this.format = () => {
             let formatedText = "";
             this.ccLog.speeches.forEach((x) => {
                 const row = `${x.recordedAt},${x.name},${x.speach}\n`;
@@ -21699,13 +21766,8 @@ class CcLogFormatter {
             });
             return formatedText;
         };
-        this.getFormatedMarkdown = () => {
-            let formatedText = "";
-            this.ccLog.speeches.forEach((x) => {
-                const row = `\`${x.name}\` ${x.speach}  \n`;
-                formatedText += row;
-            });
-            return formatedText;
+        this.getFileName = () => {
+            return (0,_core_date__WEBPACK_IMPORTED_MODULE_0__.format)(this.ccLog.recordedStAt, "YYYYMMDDHHmmss") + ".txt";
         };
         this.ccLog = ccLog;
     }
@@ -22122,8 +22184,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _popup_elements_formatTypeElement__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/popup/elements/formatTypeElement */ "./src/popup/elements/formatTypeElement.ts");
 /* harmony import */ var _popup_elements_logTableElement__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/popup/elements/logTableElement */ "./src/popup/elements/logTableElement.ts");
 /* harmony import */ var _core_ccLogFormatter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/core/ccLogFormatter */ "./src/core/ccLogFormatter.ts");
-/* harmony import */ var _core_date__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/core/date */ "./src/core/date.ts");
-/* harmony import */ var _core_utility__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/core/utility */ "./src/core/utility.ts");
+/* harmony import */ var _core_utility__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/core/utility */ "./src/core/utility.ts");
+/* harmony import */ var _core_ccLogFormatter_markDownFormatter__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/core/ccLogFormatter/markDownFormatter */ "./src/core/ccLogFormatter/markDownFormatter.ts");
+/* harmony import */ var _core_ccLogFormatter_rawFormatter__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/core/ccLogFormatter/rawFormatter */ "./src/core/ccLogFormatter/rawFormatter.ts");
+
 
 
 
@@ -22150,17 +22214,11 @@ const run = async () => {
     const callbackFuncClickOutPut = (ccLog) => {
         if (!ccLog)
             return;
-        const ccLogFormatter = new _core_ccLogFormatter__WEBPACK_IMPORTED_MODULE_4__.CcLogFormatter(ccLog);
-        if (formatTypeElement.getSelectElement().value === _core_config__WEBPACK_IMPORTED_MODULE_1__.FormatType.TEXT) {
-            const fomatedText = ccLogFormatter.getFormatedRaw();
-            const fileName = (0,_core_date__WEBPACK_IMPORTED_MODULE_5__.format)(ccLog.recordedStAt, "YYYYMMDDHHmmss") + ".txt";
-            (0,_core_utility__WEBPACK_IMPORTED_MODULE_6__.downloadTextFile)(fomatedText, fileName);
-        }
-        else {
-            const fomatedText = ccLogFormatter.getFormatedMarkdown();
-            const fileName = (0,_core_date__WEBPACK_IMPORTED_MODULE_5__.format)(ccLog.recordedStAt, "YYYYMMDDHHmmss") + ".md";
-            (0,_core_utility__WEBPACK_IMPORTED_MODULE_6__.downloadTextFile)(fomatedText, fileName);
-        }
+        const formatter = formatTypeElement.getSelectElement().value === _core_config__WEBPACK_IMPORTED_MODULE_1__.FormatType.TEXT
+            ? new _core_ccLogFormatter_rawFormatter__WEBPACK_IMPORTED_MODULE_7__.RawFormatter(ccLog)
+            : new _core_ccLogFormatter_markDownFormatter__WEBPACK_IMPORTED_MODULE_6__.MarkDownFormatter(ccLog);
+        const ccLogFormatter = new _core_ccLogFormatter__WEBPACK_IMPORTED_MODULE_4__.CcLogFormatter(formatter);
+        (0,_core_utility__WEBPACK_IMPORTED_MODULE_5__.downloadTextFile)(ccLogFormatter.getFormattedText(), ccLogFormatter.getFileName());
     };
     const logTableElement = new _popup_elements_logTableElement__WEBPACK_IMPORTED_MODULE_3__.LogTableElement(callbackFuncClickOutPut, ccLog.getCcLogs());
     console.log(ccLog.getCcLogs());
