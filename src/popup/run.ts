@@ -48,7 +48,8 @@ export const run = async (): Promise<void> => {
     if (!ccLog) return
     const ccLogFormatter = new CcLogFormatter(ccLog)
     const fomatedText = ccLogFormatter.getFormatedText()
-    downloadTextFile(fomatedText, format(ccLog.recordedStAt, "YYYYMMDDHHmmss"))
+    const fileName = format(ccLog.recordedStAt, "YYYYMMDDHHmmss") + ".csv"
+    downloadTextFile(fomatedText, fileName)
   }
   const logTableElement = new LogTableElement(
     callbackFuncClickOutPut,

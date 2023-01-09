@@ -22163,7 +22163,8 @@ const run = async () => {
             return;
         const ccLogFormatter = new _popup_ccLogFormatter__WEBPACK_IMPORTED_MODULE_5__.CcLogFormatter(ccLog);
         const fomatedText = ccLogFormatter.getFormatedText();
-        (0,_core_utility__WEBPACK_IMPORTED_MODULE_7__.downloadTextFile)(fomatedText, (0,_core_date__WEBPACK_IMPORTED_MODULE_6__.format)(ccLog.recordedStAt, "YYYYMMDDHHmmss"));
+        const fileName = (0,_core_date__WEBPACK_IMPORTED_MODULE_6__.format)(ccLog.recordedStAt, "YYYYMMDDHHmmss") + ".csv";
+        (0,_core_utility__WEBPACK_IMPORTED_MODULE_7__.downloadTextFile)(fomatedText, fileName);
     };
     const logTableElement = new _popup_elements_logTableElement__WEBPACK_IMPORTED_MODULE_4__.LogTableElement(callbackFuncClickOutPut, ccLog.getCcLogs());
     console.log(ccLog.getCcLogs());
