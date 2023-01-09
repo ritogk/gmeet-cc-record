@@ -12,7 +12,14 @@ interface logTableElementInterface {
 }
 
 export class LogTableElement implements logTableElementInterface {
-  constructor(ccLogs: CcLogObjectInterface[]) {
+  private callbackFuncClickOutPut: (
+    ccLog: CcLogObjectInterface | undefined
+  ) => void
+  constructor(
+    callbackFunc: (ccLog: CcLogObjectInterface | undefined) => void,
+    ccLogs: CcLogObjectInterface[]
+  ) {
+    this.callbackFuncClickOutPut = callbackFunc
     moment.locale("ja")
     this.setTbodyElementValue(ccLogs)
     this.observeGoogleStorage()
@@ -61,9 +68,15 @@ export class LogTableElement implements logTableElementInterface {
       outputButtonElement.textContent = "出力"
       outputButtonElement.className = "btn btn-primary btn-sm"
       outputButtonElement.value = ccLog.id.toString()
-      outputButtonElement.addEventListener("click", (event: any): void => {
-        console.log(event.target.value)
-      })
+      outputButtonElement.addEventListener(
+        "click",
+        async (event: any): Promise<void> => {
+          const ccLogs = await getStorage<CcLogObjectInterface[]>("ccLogs")
+          this.callbackFuncClickOutPut(
+            ccLogs?.find((x) => x.id === Number(event.target.value))
+          )
+        }
+      )
       tdOutPutButtonElement.appendChild(outputButtonElement)
       trElement.appendChild(tdOutPutButtonElement)
       // 削除ボタン

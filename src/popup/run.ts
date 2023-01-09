@@ -39,9 +39,13 @@ export const run = async (): Promise<void> => {
   await ccLog.loadCcLogs()
   ccLog.observeGoogleStorage()
 
-  // elements.setLogTableElement(ccLog.getCcLogs())
-
-  const logTableElement = new LogTableElement(ccLog.getCcLogs())
+  const callbackFuncClickOutPut = (ccLog: CcLogObjectInterface | undefined) => {
+    console.log(ccLog?.id)
+  }
+  const logTableElement = new LogTableElement(
+    callbackFuncClickOutPut,
+    ccLog.getCcLogs()
+  )
 }
 
 window.addEventListener("load", run, false)

@@ -21863,7 +21863,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 class LogTableElement {
-    constructor(ccLogs) {
+    constructor(callbackFunc, ccLogs) {
         this.getElement = () => {
             return document.getElementById("logTable");
         };
@@ -21900,8 +21900,9 @@ class LogTableElement {
                 outputButtonElement.textContent = "出力";
                 outputButtonElement.className = "btn btn-primary btn-sm";
                 outputButtonElement.value = ccLog.id.toString();
-                outputButtonElement.addEventListener("click", (event) => {
-                    console.log(event.target.value);
+                outputButtonElement.addEventListener("click", async (event) => {
+                    const ccLogs = await (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.getStorage)("ccLogs");
+                    this.callbackFuncClickOutPut(ccLogs === null || ccLogs === void 0 ? void 0 : ccLogs.find((x) => x.id === Number(event.target.value)));
                 });
                 tdOutPutButtonElement.appendChild(outputButtonElement);
                 trElement.appendChild(tdOutPutButtonElement);
@@ -21933,6 +21934,7 @@ class LogTableElement {
                 }
             });
         };
+        this.callbackFuncClickOutPut = callbackFunc;
         moment__WEBPACK_IMPORTED_MODULE_2___default().locale("ja");
         this.setTbodyElementValue(ccLogs);
         this.observeGoogleStorage();
@@ -22077,8 +22079,10 @@ const run = async () => {
     const ccLog = new _core_ccLog__WEBPACK_IMPORTED_MODULE_0__.CcLog(callbackFuncChangeCcLogs);
     await ccLog.loadCcLogs();
     ccLog.observeGoogleStorage();
-    // elements.setLogTableElement(ccLog.getCcLogs())
-    const logTableElement = new _popup_elements_logTableElement__WEBPACK_IMPORTED_MODULE_4__.LogTableElement(ccLog.getCcLogs());
+    const callbackFuncClickOutPut = (ccLog) => {
+        console.log(ccLog === null || ccLog === void 0 ? void 0 : ccLog.id);
+    };
+    const logTableElement = new _popup_elements_logTableElement__WEBPACK_IMPORTED_MODULE_4__.LogTableElement(callbackFuncClickOutPut, ccLog.getCcLogs());
 };
 window.addEventListener("load", run, false);
 
