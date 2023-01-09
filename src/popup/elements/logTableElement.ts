@@ -1,4 +1,3 @@
-import { FormatType } from "@/core/config"
 import { CcLogObjectInterface } from "@/core/ccLog"
 import { setStorage, getStorage } from "@/core/chromeStorage"
 import { groupByObject } from "@/core/utility"
