@@ -21779,6 +21779,40 @@ const groupByObject = (array, getKey) => array.reduce((obj, cur, idx, src) => {
 
 /***/ }),
 
+/***/ "./src/popup/ccLogFormatter.ts":
+/*!*************************************!*\
+  !*** ./src/popup/ccLogFormatter.ts ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "CcLogFormatter": () => (/* binding */ CcLogFormatter)
+/* harmony export */ });
+class CcLogFormatter {
+    constructor(ccLog) {
+        this.ccLog = {
+            id: 0,
+            recordedEdAt: 0,
+            recordedStAt: 0,
+            speeches: [],
+        };
+        this.ccLog = ccLog;
+    }
+    getFormatedText() {
+        let formatedText = "";
+        this.ccLog.speeches.forEach((x) => {
+            const row = `time:${x.recordedAt} name:${x.name} speach:${x.speach}\n`;
+            formatedText += row;
+        });
+        return formatedText;
+    }
+}
+
+
+/***/ }),
+
 /***/ "./src/popup/elements/formatTypeElement.ts":
 /*!*************************************************!*\
   !*** ./src/popup/elements/formatTypeElement.ts ***!
@@ -22043,9 +22077,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core_chromeStorage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/core/chromeStorage */ "./src/core/chromeStorage.ts");
 /* harmony import */ var _popup_elements_formatTypeElement__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/popup/elements/formatTypeElement */ "./src/popup/elements/formatTypeElement.ts");
 /* harmony import */ var _popup_elements_logTableElement__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/popup/elements/logTableElement */ "./src/popup/elements/logTableElement.ts");
+/* harmony import */ var _popup_ccLogFormatter__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/popup/ccLogFormatter */ "./src/popup/ccLogFormatter.ts");
 
 
 // import { Elements } from "@/popup/elements"
+
 
 
 
@@ -22079,8 +22115,21 @@ const run = async () => {
     const ccLog = new _core_ccLog__WEBPACK_IMPORTED_MODULE_0__.CcLog(callbackFuncChangeCcLogs);
     await ccLog.loadCcLogs();
     ccLog.observeGoogleStorage();
+    // 出力ボタン押下後のコールバック関数
     const callbackFuncClickOutPut = (ccLog) => {
-        console.log(ccLog === null || ccLog === void 0 ? void 0 : ccLog.id);
+        if (!ccLog)
+            return;
+        console.log(ccLog.id);
+        const ccLogFormatter = new _popup_ccLogFormatter__WEBPACK_IMPORTED_MODULE_5__.CcLogFormatter(ccLog);
+        const fomatedText = ccLogFormatter.getFormatedText();
+        console.log(fomatedText);
+        const blob = new Blob([fomatedText], { type: "text/plain" });
+        const aTag = document.createElement("a");
+        aTag.href = URL.createObjectURL(blob);
+        aTag.target = "_blank";
+        aTag.download = ccLog.recordedStAt.toString();
+        aTag.click();
+        URL.revokeObjectURL(aTag.href);
     };
     const logTableElement = new _popup_elements_logTableElement__WEBPACK_IMPORTED_MODULE_4__.LogTableElement(callbackFuncClickOutPut, ccLog.getCcLogs());
 };

@@ -4,6 +4,8 @@ import { Config, ConfigObjectInterface, FormatType } from "@/core/config"
 import { setStorage, sendContents } from "@/core/chromeStorage"
 import { FormatTypeElement } from "@/popup/elements/formatTypeElement"
 import { LogTableElement } from "@/popup/elements/logTableElement"
+import { CcLogFormatter } from "@/popup/ccLogFormatter"
+
 export const run = async (): Promise<void> => {
   console.log("start: popup")
 
@@ -39,8 +41,21 @@ export const run = async (): Promise<void> => {
   await ccLog.loadCcLogs()
   ccLog.observeGoogleStorage()
 
+  // 出力ボタン押下後のコールバック関数
   const callbackFuncClickOutPut = (ccLog: CcLogObjectInterface | undefined) => {
-    console.log(ccLog?.id)
+    if (!ccLog) return
+    console.log(ccLog.id)
+    const ccLogFormatter = new CcLogFormatter(ccLog)
+    const fomatedText = ccLogFormatter.getFormatedText()
+    console.log(fomatedText)
+
+    const blob = new Blob([fomatedText], { type: "text/plain" })
+    const aTag = document.createElement("a")
+    aTag.href = URL.createObjectURL(blob)
+    aTag.target = "_blank"
+    aTag.download = ccLog.recordedStAt.toString()
+    aTag.click()
+    URL.revokeObjectURL(aTag.href)
   }
   const logTableElement = new LogTableElement(
     callbackFuncClickOutPut,
