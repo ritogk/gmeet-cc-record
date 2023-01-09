@@ -1,8 +1,10 @@
 import { FormatterInterface } from "@/core/ccLogFormatter/formatterInterface"
+import { downloadTextFile } from "@/core/utility"
 
 interface ccLogFormatterInterface {
   getFormattedText(): string
   getFileName(): string
+  download(): void
 }
 
 export class CcLogFormatter implements ccLogFormatterInterface {
@@ -11,11 +13,15 @@ export class CcLogFormatter implements ccLogFormatterInterface {
     this.formatter = formatter
   }
 
-  getFormattedText(): string {
+  getFormattedText = (): string => {
     return this.formatter.format()
   }
 
-  getFileName(): string {
+  getFileName = (): string => {
     return this.formatter.getFileName()
+  }
+
+  download = (): void => {
+    downloadTextFile(this.getFormattedText(), this.getFileName())
   }
 }

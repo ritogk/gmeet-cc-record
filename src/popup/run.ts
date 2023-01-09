@@ -3,7 +3,6 @@ import { Config, ConfigObjectInterface, FormatType } from "@/core/config"
 import { FormatTypeElement } from "@/popup/elements/formatTypeElement"
 import { LogTableElement } from "@/popup/elements/logTableElement"
 import { CcLogFormatter } from "@/core/ccLogFormatter"
-import { downloadTextFile } from "@/core/utility"
 import { MarkDownFormatter } from "@/core/ccLogFormatter/markDownFormatter"
 import { RawFormatter } from "@/core/ccLogFormatter/rawFormatter"
 import { FormatterInterface } from "@/core/ccLogFormatter/formatterInterface"
@@ -35,10 +34,7 @@ export const run = async (): Promise<void> => {
         ? new RawFormatter(ccLog)
         : new MarkDownFormatter(ccLog)
     const ccLogFormatter = new CcLogFormatter(formatter)
-    downloadTextFile(
-      ccLogFormatter.getFormattedText(),
-      ccLogFormatter.getFileName()
-    )
+    ccLogFormatter.download()
   }
   const logTableElement = new LogTableElement(
     callbackFuncClickOutPut,
