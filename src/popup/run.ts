@@ -2,7 +2,7 @@ import { CcLog, CcLogObjectInterface } from "@/core/ccLog"
 import { Config, ConfigObjectInterface, FormatType } from "@/core/config"
 import { FormatTypeElement } from "@/popup/elements/formatTypeElement"
 import { LogTableElement } from "@/popup/elements/logTableElement"
-import { CcLogFormatter } from "@/popup/ccLogFormatter"
+import { CcLogFormatter } from "@/core/ccLogFormatter"
 import { format } from "@/core/date"
 import { downloadTextFile } from "@/core/utility"
 

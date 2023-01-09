@@ -21672,6 +21672,48 @@ class CcLog {
 
 /***/ }),
 
+/***/ "./src/core/ccLogFormatter.ts":
+/*!************************************!*\
+  !*** ./src/core/ccLogFormatter.ts ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "CcLogFormatter": () => (/* binding */ CcLogFormatter)
+/* harmony export */ });
+class CcLogFormatter {
+    constructor(ccLog) {
+        this.ccLog = {
+            id: 0,
+            recordedEdAt: 0,
+            recordedStAt: 0,
+            speeches: [],
+        };
+        this.getFormatedRaw = () => {
+            let formatedText = "";
+            this.ccLog.speeches.forEach((x) => {
+                const row = `${x.recordedAt},${x.name},${x.speach}\n`;
+                formatedText += row;
+            });
+            return formatedText;
+        };
+        this.getFormatedMarkdown = () => {
+            let formatedText = "";
+            this.ccLog.speeches.forEach((x) => {
+                const row = `\`${x.name}\` ${x.speach}  \n`;
+                formatedText += row;
+            });
+            return formatedText;
+        };
+        this.ccLog = ccLog;
+    }
+}
+
+
+/***/ }),
+
 /***/ "./src/core/chromeStorage.ts":
 /*!***********************************!*\
   !*** ./src/core/chromeStorage.ts ***!
@@ -21814,48 +21856,6 @@ const downloadTextFile = (text, fileName) => {
     URL.revokeObjectURL(aTag.href);
 };
 
-
-
-/***/ }),
-
-/***/ "./src/popup/ccLogFormatter.ts":
-/*!*************************************!*\
-  !*** ./src/popup/ccLogFormatter.ts ***!
-  \*************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "CcLogFormatter": () => (/* binding */ CcLogFormatter)
-/* harmony export */ });
-class CcLogFormatter {
-    constructor(ccLog) {
-        this.ccLog = {
-            id: 0,
-            recordedEdAt: 0,
-            recordedStAt: 0,
-            speeches: [],
-        };
-        this.getFormatedRaw = () => {
-            let formatedText = "";
-            this.ccLog.speeches.forEach((x) => {
-                const row = `${x.recordedAt},${x.name},${x.speach}\n`;
-                formatedText += row;
-            });
-            return formatedText;
-        };
-        this.getFormatedMarkdown = () => {
-            let formatedText = "";
-            this.ccLog.speeches.forEach((x) => {
-                const row = `\`${x.name}\` ${x.speach}  \n`;
-                formatedText += row;
-            });
-            return formatedText;
-        };
-        this.ccLog = ccLog;
-    }
-}
 
 
 /***/ }),
@@ -22121,7 +22121,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core_config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/core/config */ "./src/core/config.ts");
 /* harmony import */ var _popup_elements_formatTypeElement__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/popup/elements/formatTypeElement */ "./src/popup/elements/formatTypeElement.ts");
 /* harmony import */ var _popup_elements_logTableElement__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/popup/elements/logTableElement */ "./src/popup/elements/logTableElement.ts");
-/* harmony import */ var _popup_ccLogFormatter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/popup/ccLogFormatter */ "./src/popup/ccLogFormatter.ts");
+/* harmony import */ var _core_ccLogFormatter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/core/ccLogFormatter */ "./src/core/ccLogFormatter.ts");
 /* harmony import */ var _core_date__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/core/date */ "./src/core/date.ts");
 /* harmony import */ var _core_utility__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/core/utility */ "./src/core/utility.ts");
 
@@ -22150,7 +22150,7 @@ const run = async () => {
     const callbackFuncClickOutPut = (ccLog) => {
         if (!ccLog)
             return;
-        const ccLogFormatter = new _popup_ccLogFormatter__WEBPACK_IMPORTED_MODULE_4__.CcLogFormatter(ccLog);
+        const ccLogFormatter = new _core_ccLogFormatter__WEBPACK_IMPORTED_MODULE_4__.CcLogFormatter(ccLog);
         if (formatTypeElement.getSelectElement().value === _core_config__WEBPACK_IMPORTED_MODULE_1__.FormatType.TEXT) {
             const fomatedText = ccLogFormatter.getFormatedRaw();
             const fileName = (0,_core_date__WEBPACK_IMPORTED_MODULE_5__.format)(ccLog.recordedStAt, "YYYYMMDDHHmmss") + ".txt";
