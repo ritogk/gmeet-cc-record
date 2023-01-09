@@ -1,6 +1,5 @@
 import { CcLog, CcLogObjectInterface } from "@/core/ccLog"
 import { Config, ConfigObjectInterface, FormatType } from "@/core/config"
-import { setStorage } from "@/core/chromeStorage"
 import { FormatTypeElement } from "@/popup/elements/formatTypeElement"
 import { LogTableElement } from "@/popup/elements/logTableElement"
 import { CcLogFormatter } from "@/popup/ccLogFormatter"
@@ -15,14 +14,6 @@ export const run = async (): Promise<void> => {
   await config.loadConfig()
   const configData = config.getConfig()
   console.log(`load config: ${JSON.stringify(configData)}`)
-
-  // elementsの変更後のコールバック関数
-  const callbackFuncChangeElement = (formatType: FormatType) => {
-    // configとストレージを更新
-    console.log("changeElement")
-    configData.formatType = formatType
-    setStorage("formatType", formatType)
-  }
 
   const formatTypeElement = new FormatTypeElement(configData.formatType)
 

@@ -22119,13 +22119,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _core_ccLog__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/core/ccLog */ "./src/core/ccLog.ts");
 /* harmony import */ var _core_config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/core/config */ "./src/core/config.ts");
-/* harmony import */ var _core_chromeStorage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/core/chromeStorage */ "./src/core/chromeStorage.ts");
-/* harmony import */ var _popup_elements_formatTypeElement__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/popup/elements/formatTypeElement */ "./src/popup/elements/formatTypeElement.ts");
-/* harmony import */ var _popup_elements_logTableElement__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/popup/elements/logTableElement */ "./src/popup/elements/logTableElement.ts");
-/* harmony import */ var _popup_ccLogFormatter__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/popup/ccLogFormatter */ "./src/popup/ccLogFormatter.ts");
-/* harmony import */ var _core_date__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/core/date */ "./src/core/date.ts");
-/* harmony import */ var _core_utility__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/core/utility */ "./src/core/utility.ts");
-
+/* harmony import */ var _popup_elements_formatTypeElement__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/popup/elements/formatTypeElement */ "./src/popup/elements/formatTypeElement.ts");
+/* harmony import */ var _popup_elements_logTableElement__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/popup/elements/logTableElement */ "./src/popup/elements/logTableElement.ts");
+/* harmony import */ var _popup_ccLogFormatter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/popup/ccLogFormatter */ "./src/popup/ccLogFormatter.ts");
+/* harmony import */ var _core_date__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/core/date */ "./src/core/date.ts");
+/* harmony import */ var _core_utility__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/core/utility */ "./src/core/utility.ts");
 
 
 
@@ -22140,14 +22138,7 @@ const run = async () => {
     await config.loadConfig();
     const configData = config.getConfig();
     console.log(`load config: ${JSON.stringify(configData)}`);
-    // elementsの変更後のコールバック関数
-    const callbackFuncChangeElement = (formatType) => {
-        // configとストレージを更新
-        console.log("changeElement");
-        configData.formatType = formatType;
-        (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_2__.setStorage)("formatType", formatType);
-    };
-    const formatTypeElement = new _popup_elements_formatTypeElement__WEBPACK_IMPORTED_MODULE_3__.FormatTypeElement(configData.formatType);
+    const formatTypeElement = new _popup_elements_formatTypeElement__WEBPACK_IMPORTED_MODULE_2__.FormatTypeElement(configData.formatType);
     // log変更時のコールバック関数
     const callbackFuncChangeCcLogs = (ccLogs) => {
         console.log("mutate: ccLogs");
@@ -22159,19 +22150,19 @@ const run = async () => {
     const callbackFuncClickOutPut = (ccLog) => {
         if (!ccLog)
             return;
-        const ccLogFormatter = new _popup_ccLogFormatter__WEBPACK_IMPORTED_MODULE_5__.CcLogFormatter(ccLog);
+        const ccLogFormatter = new _popup_ccLogFormatter__WEBPACK_IMPORTED_MODULE_4__.CcLogFormatter(ccLog);
         if (formatTypeElement.getSelectElement().value === _core_config__WEBPACK_IMPORTED_MODULE_1__.FormatType.TEXT) {
             const fomatedText = ccLogFormatter.getFormatedRaw();
-            const fileName = (0,_core_date__WEBPACK_IMPORTED_MODULE_6__.format)(ccLog.recordedStAt, "YYYYMMDDHHmmss") + ".txt";
-            (0,_core_utility__WEBPACK_IMPORTED_MODULE_7__.downloadTextFile)(fomatedText, fileName);
+            const fileName = (0,_core_date__WEBPACK_IMPORTED_MODULE_5__.format)(ccLog.recordedStAt, "YYYYMMDDHHmmss") + ".txt";
+            (0,_core_utility__WEBPACK_IMPORTED_MODULE_6__.downloadTextFile)(fomatedText, fileName);
         }
         else {
             const fomatedText = ccLogFormatter.getFormatedMarkdown();
-            const fileName = (0,_core_date__WEBPACK_IMPORTED_MODULE_6__.format)(ccLog.recordedStAt, "YYYYMMDDHHmmss") + ".md";
-            (0,_core_utility__WEBPACK_IMPORTED_MODULE_7__.downloadTextFile)(fomatedText, fileName);
+            const fileName = (0,_core_date__WEBPACK_IMPORTED_MODULE_5__.format)(ccLog.recordedStAt, "YYYYMMDDHHmmss") + ".md";
+            (0,_core_utility__WEBPACK_IMPORTED_MODULE_6__.downloadTextFile)(fomatedText, fileName);
         }
     };
-    const logTableElement = new _popup_elements_logTableElement__WEBPACK_IMPORTED_MODULE_4__.LogTableElement(callbackFuncClickOutPut, ccLog.getCcLogs());
+    const logTableElement = new _popup_elements_logTableElement__WEBPACK_IMPORTED_MODULE_3__.LogTableElement(callbackFuncClickOutPut, ccLog.getCcLogs());
     console.log(ccLog.getCcLogs());
 };
 window.addEventListener("load", run, false);
