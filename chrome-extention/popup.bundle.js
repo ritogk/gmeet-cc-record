@@ -186,60 +186,95 @@ const groupByObject = (array, getKey) => array.reduce((obj, cur, idx, src) => {
 
 /***/ }),
 
-/***/ "./src/popup/elements.ts":
-/*!*******************************!*\
-  !*** ./src/popup/elements.ts ***!
-  \*******************************/
+/***/ "./src/popup/elements/formatTypeElement.ts":
+/*!*************************************************!*\
+  !*** ./src/popup/elements/formatTypeElement.ts ***!
+  \*************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Elements": () => (/* binding */ Elements)
+/* harmony export */   "FormatTypeElement": () => (/* binding */ FormatTypeElement)
 /* harmony export */ });
 /* harmony import */ var _core_config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/core/config */ "./src/core/config.ts");
-/* harmony import */ var _core_utility__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/core/utility */ "./src/core/utility.ts");
-/* harmony import */ var _core_ccLog__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/core/ccLog */ "./src/core/ccLog.ts");
+/* harmony import */ var _core_chromeStorage__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/core/chromeStorage */ "./src/core/chromeStorage.ts");
 
 
-
-class Elements {
-    constructor(formatType, callbackFuncChange) {
-        this.elemets = {
-            formatType: null,
-            logTable: null,
-        };
+class FormatTypeElement {
+    constructor(formatType) {
         this.getElements = () => {
-            return this.elemets;
+            return (document.getElementsByName("formatType"));
         };
-        this.getFormatTypeElement = () => {
-            return this.elemets.formatType;
-        };
-        this.setFormatTypeElementChecked = (formatType) => {
-            if (!this.elemets.formatType)
-                return;
-            if (formatType === _core_config__WEBPACK_IMPORTED_MODULE_0__.FormatType.TEXT) {
-                this.elemets.formatType[0].checked = true;
-            }
-            if (formatType === _core_config__WEBPACK_IMPORTED_MODULE_0__.FormatType.MARKDOWN) {
-                this.elemets.formatType[1].checked = true;
-            }
-        };
-        this.getFormatTypeElementChecked = () => {
-            if (!this.elemets.formatType)
-                return null;
-            if (this.elemets.formatType[0].checked) {
-                return this.elemets.formatType[0];
+        this.getSelectElement = () => {
+            const elements = this.getElements();
+            if (elements[0].checked) {
+                return elements[0];
             }
             else {
-                return this.elemets.formatType[1];
+                return elements[1];
             }
         };
-        this.getLogTableElement = () => {
-            return this.elemets.logTable;
+        const elements = this.getElements();
+        elements[0].value = _core_config__WEBPACK_IMPORTED_MODULE_0__.FormatType.TEXT;
+        elements[1].value = _core_config__WEBPACK_IMPORTED_MODULE_0__.FormatType.MARKDOWN;
+        // 初期値
+        if (formatType === _core_config__WEBPACK_IMPORTED_MODULE_0__.FormatType.TEXT) {
+            elements[0].checked = true;
+        }
+        else {
+            elements[1].checked = true;
+        }
+        // 変更後にstorageに保存
+        elements[0].addEventListener("change", (event) => {
+            console.log("change formatTypeElements");
+            if (event.target instanceof HTMLInputElement) {
+                if (!event.target.checked)
+                    return;
+                console.log(event.target.value);
+                (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_1__.setStorage)("formatType", event.target.value);
+            }
+        });
+        // 変更後にstorageに保存
+        elements[1].addEventListener("change", (event) => {
+            console.log("change formatTypeElements");
+            if (event.target instanceof HTMLInputElement) {
+                if (!event.target.checked)
+                    return;
+                console.log(event.target.value);
+                (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_1__.setStorage)("formatType", event.target.value);
+            }
+        });
+    }
+}
+
+
+/***/ }),
+
+/***/ "./src/popup/elements/logTableElement.ts":
+/*!***********************************************!*\
+  !*** ./src/popup/elements/logTableElement.ts ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "LogTableElement": () => (/* binding */ LogTableElement)
+/* harmony export */ });
+/* harmony import */ var _core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/core/chromeStorage */ "./src/core/chromeStorage.ts");
+/* harmony import */ var _core_utility__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/core/utility */ "./src/core/utility.ts");
+
+
+class LogTableElement {
+    constructor(ccLogs) {
+        this.getElement = () => {
+            return document.getElementById("logTable");
         };
-        this.setLogTableElement = (ccLogs) => {
+        this.deleteTbodyElement = () => {
             var _a;
-            (_a = document.getElementById("logTableData")) === null || _a === void 0 ? void 0 : _a.remove();
+            (_a = this.getTbodyElement()) === null || _a === void 0 ? void 0 : _a.remove();
+        };
+        this.setTbodyElementValue = (ccLogs) => {
+            this.deleteTbodyElement();
             const tbodyElement = document.createElement("tbody");
             tbodyElement.id = "logTableData";
             const sortCcLogs = ccLogs.sort((a, b) => {
@@ -279,51 +314,32 @@ class Elements {
                 deleteButtonElement.className = "btn btn-danger btn-sm";
                 deleteButtonElement.value = ccLog.id.toString();
                 deleteButtonElement.addEventListener("click", async (event) => {
-                    debugger;
-                    console.log(event.target.value);
-                    const ccLog = new _core_ccLog__WEBPACK_IMPORTED_MODULE_2__.CcLog((ccLogs) => { });
-                    await ccLog.loadCcLogs();
-                    ccLog.deleteCcLog(Number(event.target.value));
+                    const ccLogs = await (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.getStorage)("ccLogs");
+                    if (ccLogs === null)
+                        return;
+                    (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.setStorage)("ccLogs", ccLogs.filter((x) => {
+                        return x.id !== Number(event.target.value);
+                    }));
                 });
                 tdDeleteButtonElement.appendChild(deleteButtonElement);
                 trElement.appendChild(tdDeleteButtonElement);
                 tbodyElement.appendChild(trElement);
             });
-            const tableElement = this.getLogTableElement();
+            const tableElement = this.getElement();
             tableElement === null || tableElement === void 0 ? void 0 : tableElement.appendChild(tbodyElement);
         };
-        this.callbackFuncChange = callbackFuncChange;
-        this.elemets.formatType = (document.getElementsByName("formatType"));
-        this.elemets.formatType[0].value = _core_config__WEBPACK_IMPORTED_MODULE_0__.FormatType.TEXT;
-        this.elemets.formatType[1].value = _core_config__WEBPACK_IMPORTED_MODULE_0__.FormatType.MARKDOWN;
-        // 初期値
-        if (formatType === _core_config__WEBPACK_IMPORTED_MODULE_0__.FormatType.TEXT) {
-            this.elemets.formatType[0].checked = true;
-        }
-        else {
-            this.elemets.formatType[1].checked = true;
-        }
-        this.elemets.logTable = (document.getElementById("logTable"));
-        // 変更を検知してcallbackを実行
-        this.elemets.formatType[0].addEventListener("change", (event) => {
-            console.log("change formatTypeElements");
-            if (event.target instanceof HTMLInputElement) {
-                if (!event.target.checked)
-                    return;
-                console.log(event.target.value);
-                this.callbackFuncChange(event.target.value);
-            }
-        });
-        // 変更を検知してcallbackを実行
-        this.elemets.formatType[1].addEventListener("change", (event) => {
-            console.log("change formatTypeElements");
-            if (event.target instanceof HTMLInputElement) {
-                if (!event.target.checked)
-                    return;
-                console.log(event.target.value);
-                this.callbackFuncChange(event.target.value);
-            }
-        });
+        this.observeGoogleStorage = () => {
+            chrome.storage.onChanged.addListener((changes, namespace) => {
+                if ("ccLogs" in changes) {
+                    this.setTbodyElementValue(changes.ccLogs.newValue);
+                }
+            });
+        };
+        this.setTbodyElementValue(ccLogs);
+        this.observeGoogleStorage();
+    }
+    getTbodyElement() {
+        return document.getElementById("logTableData");
     }
 }
 
@@ -398,9 +414,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _core_ccLog__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/core/ccLog */ "./src/core/ccLog.ts");
 /* harmony import */ var _core_config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/core/config */ "./src/core/config.ts");
-/* harmony import */ var _popup_elements__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/popup/elements */ "./src/popup/elements.ts");
-/* harmony import */ var _core_chromeStorage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/core/chromeStorage */ "./src/core/chromeStorage.ts");
+/* harmony import */ var _core_chromeStorage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/core/chromeStorage */ "./src/core/chromeStorage.ts");
+/* harmony import */ var _popup_elements_formatTypeElement__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/popup/elements/formatTypeElement */ "./src/popup/elements/formatTypeElement.ts");
+/* harmony import */ var _popup_elements_logTableElement__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/popup/elements/logTableElement */ "./src/popup/elements/logTableElement.ts");
 
+
+// import { Elements } from "@/popup/elements"
 
 
 
@@ -413,24 +432,29 @@ const run = async () => {
     console.log(`load config: ${JSON.stringify(configData)}`);
     // elementsの変更後のコールバック関数
     const callbackFuncChangeElement = (formatType) => {
-        elements.setLogTableElement(ccLog.getCcLogs());
+        // elements.setLogTableElement(ccLog.getCcLogs())
         // configとストレージを更新
         console.log("changeElement");
         configData.formatType = formatType;
-        (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_3__.setStorage)("formatType", formatType);
-        (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_3__.sendContents)(configData);
+        (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_2__.setStorage)("formatType", formatType);
+        (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_2__.sendContents)(configData);
     };
-    const elements = new _popup_elements__WEBPACK_IMPORTED_MODULE_2__.Elements(configData.formatType, callbackFuncChangeElement);
+    // const elements = new Elements(
+    //   configData.formatType,
+    //   callbackFuncChangeElement
+    // )
+    const formatTypeElement = new _popup_elements_formatTypeElement__WEBPACK_IMPORTED_MODULE_3__.FormatTypeElement(configData.formatType);
     // log変更時のコールバック関数
     const callbackFuncChangeCcLogs = (ccLogs) => {
         console.log("mutate: ccLogs");
         // テーブルのdomを更新する。
-        elements.setLogTableElement(ccLogs);
+        // elements.setLogTableElement(ccLogs)
     };
     const ccLog = new _core_ccLog__WEBPACK_IMPORTED_MODULE_0__.CcLog(callbackFuncChangeCcLogs);
     await ccLog.loadCcLogs();
     ccLog.observeGoogleStorage();
-    elements.setLogTableElement(ccLog.getCcLogs());
+    // elements.setLogTableElement(ccLog.getCcLogs())
+    const logTableElement = new _popup_elements_logTableElement__WEBPACK_IMPORTED_MODULE_4__.LogTableElement(ccLog.getCcLogs());
 };
 window.addEventListener("load", run, false);
 
