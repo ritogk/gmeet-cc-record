@@ -21852,15 +21852,23 @@ class CcLogFormatter {
             recordedStAt: 0,
             speeches: [],
         };
+        this.getFormatedRaw = () => {
+            let formatedText = "";
+            this.ccLog.speeches.forEach((x) => {
+                const row = `${x.recordedAt},${x.name},${x.speach}\n`;
+                formatedText += row;
+            });
+            return formatedText;
+        };
+        this.getFormatedMarkdown = () => {
+            let formatedText = "";
+            this.ccLog.speeches.forEach((x) => {
+                const row = `\`${x.name}\` ${x.speach}  \n`;
+                formatedText += row;
+            });
+            return formatedText;
+        };
         this.ccLog = ccLog;
-    }
-    getFormatedRaw() {
-        let formatedText = "";
-        this.ccLog.speeches.forEach((x) => {
-            const row = `${x.recordedAt},${x.name},${x.speach}\n`;
-            formatedText += row;
-        });
-        return formatedText;
     }
 }
 
@@ -22150,23 +22158,16 @@ const run = async () => {
     console.log(`load config: ${JSON.stringify(configData)}`);
     // elementsの変更後のコールバック関数
     const callbackFuncChangeElement = (formatType) => {
-        // elements.setLogTableElement(ccLog.getCcLogs())
         // configとストレージを更新
         console.log("changeElement");
         configData.formatType = formatType;
         (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_2__.setStorage)("formatType", formatType);
         (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_2__.sendContents)(configData);
     };
-    // const elements = new Elements(
-    //   configData.formatType,
-    //   callbackFuncChangeElement
-    // )
     const formatTypeElement = new _popup_elements_formatTypeElement__WEBPACK_IMPORTED_MODULE_3__.FormatTypeElement(configData.formatType);
     // log変更時のコールバック関数
     const callbackFuncChangeCcLogs = (ccLogs) => {
         console.log("mutate: ccLogs");
-        // テーブルのdomを更新する。
-        // elements.setLogTableElement(ccLogs)
     };
     const ccLog = new _core_ccLog__WEBPACK_IMPORTED_MODULE_0__.CcLog(callbackFuncChangeCcLogs);
     await ccLog.loadCcLogs();
@@ -22176,9 +22177,16 @@ const run = async () => {
         if (!ccLog)
             return;
         const ccLogFormatter = new _popup_ccLogFormatter__WEBPACK_IMPORTED_MODULE_5__.CcLogFormatter(ccLog);
-        const fomatedText = ccLogFormatter.getFormatedRaw();
-        const fileName = (0,_core_date__WEBPACK_IMPORTED_MODULE_6__.format)(ccLog.recordedStAt, "YYYYMMDDHHmmss") + ".csv";
-        (0,_core_utility__WEBPACK_IMPORTED_MODULE_7__.downloadTextFile)(fomatedText, fileName);
+        if (formatTypeElement.getSelectElement().value === _core_config__WEBPACK_IMPORTED_MODULE_1__.FormatType.TEXT) {
+            const fomatedText = ccLogFormatter.getFormatedRaw();
+            const fileName = (0,_core_date__WEBPACK_IMPORTED_MODULE_6__.format)(ccLog.recordedStAt, "YYYYMMDDHHmmss") + ".txt";
+            (0,_core_utility__WEBPACK_IMPORTED_MODULE_7__.downloadTextFile)(fomatedText, fileName);
+        }
+        else {
+            const fomatedText = ccLogFormatter.getFormatedMarkdown();
+            const fileName = (0,_core_date__WEBPACK_IMPORTED_MODULE_6__.format)(ccLog.recordedStAt, "YYYYMMDDHHmmss") + ".md";
+            (0,_core_utility__WEBPACK_IMPORTED_MODULE_7__.downloadTextFile)(fomatedText, fileName);
+        }
     };
     const logTableElement = new _popup_elements_logTableElement__WEBPACK_IMPORTED_MODULE_4__.LogTableElement(callbackFuncClickOutPut, ccLog.getCcLogs());
     console.log(ccLog.getCcLogs());

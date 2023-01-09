@@ -19,25 +19,18 @@ export const run = async (): Promise<void> => {
 
   // elementsの変更後のコールバック関数
   const callbackFuncChangeElement = (formatType: FormatType) => {
-    // elements.setLogTableElement(ccLog.getCcLogs())
     // configとストレージを更新
     console.log("changeElement")
     configData.formatType = formatType
     setStorage("formatType", formatType)
     sendContents(configData)
   }
-  // const elements = new Elements(
-  //   configData.formatType,
-  //   callbackFuncChangeElement
-  // )
 
   const formatTypeElement = new FormatTypeElement(configData.formatType)
 
   // log変更時のコールバック関数
   const callbackFuncChangeCcLogs = (ccLogs: CcLogObjectInterface[]): void => {
     console.log("mutate: ccLogs")
-    // テーブルのdomを更新する。
-    // elements.setLogTableElement(ccLogs)
   }
   const ccLog = new CcLog(callbackFuncChangeCcLogs)
   await ccLog.loadCcLogs()
@@ -47,9 +40,15 @@ export const run = async (): Promise<void> => {
   const callbackFuncClickOutPut = (ccLog: CcLogObjectInterface | undefined) => {
     if (!ccLog) return
     const ccLogFormatter = new CcLogFormatter(ccLog)
-    const fomatedText = ccLogFormatter.getFormatedRaw()
-    const fileName = format(ccLog.recordedStAt, "YYYYMMDDHHmmss") + ".csv"
-    downloadTextFile(fomatedText, fileName)
+    if (formatTypeElement.getSelectElement().value === FormatType.TEXT) {
+      const fomatedText = ccLogFormatter.getFormatedRaw()
+      const fileName = format(ccLog.recordedStAt, "YYYYMMDDHHmmss") + ".txt"
+      downloadTextFile(fomatedText, fileName)
+    } else {
+      const fomatedText = ccLogFormatter.getFormatedMarkdown()
+      const fileName = format(ccLog.recordedStAt, "YYYYMMDDHHmmss") + ".md"
+      downloadTextFile(fomatedText, fileName)
+    }
   }
   const logTableElement = new LogTableElement(
     callbackFuncClickOutPut,
