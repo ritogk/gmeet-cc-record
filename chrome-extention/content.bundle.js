@@ -2659,13 +2659,10 @@ class CcLog {
             this.setCcLogs((_a = (await (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.getStorage)("ccLogs"))) !== null && _a !== void 0 ? _a : []);
         };
         this.observeGoogleStorage = () => {
-            (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.addListener)((message) => {
-                const data = JSON.parse(message);
-                const logs = this.logs;
-                if ("ccLogs" in data) {
-                    logs.ccLogs = data.ccLogs;
+            chrome.storage.onChanged.addListener((changes, namespace) => {
+                if ("ccLogs" in changes) {
+                    this.setCcLogs(changes.ccLogs.newValue);
                 }
-                this.setCcLogs(logs.ccLogs);
             });
         };
         this.callbackFuncChange = callbackFunc;
@@ -2723,11 +2720,17 @@ const addListener = (callbackFunc) => {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "copyObject": () => (/* binding */ copyObject)
+/* harmony export */   "copyObject": () => (/* binding */ copyObject),
+/* harmony export */   "groupByObject": () => (/* binding */ groupByObject)
 /* harmony export */ });
 const copyObject = (object) => {
     return JSON.parse(JSON.stringify(object));
 };
+const groupByObject = (array, getKey) => array.reduce((obj, cur, idx, src) => {
+    const key = getKey(cur, idx, src);
+    (obj[key] || (obj[key] = [])).push(cur);
+    return obj;
+}, {});
 
 
 

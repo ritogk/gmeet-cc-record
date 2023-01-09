@@ -2,6 +2,7 @@ import { CcLog, CcLogObjectInterface } from "@/core/ccLog"
 import { Config, ConfigObjectInterface, FormatType } from "@/core/config"
 import { Elements } from "@/popup/elements"
 import { setStorage, sendContents } from "@/core/chromeStorage"
+
 export const run = async (): Promise<void> => {
   console.log("start: popup")
 
@@ -11,18 +12,9 @@ export const run = async (): Promise<void> => {
   const configData = config.getConfig()
   console.log(`load config: ${JSON.stringify(configData)}`)
 
-  // log変更時のコールバック関数
-  const callbackFuncChangeCcLogs = (ccLogs: CcLogObjectInterface[]): void => {
-    console.log("mutate: ccLogs")
-    // テーブルのdomを更新する。
-    console.log(JSON.stringify(ccLogs))
-  }
-  const ccLog = new CcLog(callbackFuncChangeCcLogs)
-  await ccLog.loadCcLogs()
-  ccLog.observeGoogleStorage()
-
   // elementsの変更後のコールバック関数
   const callbackFuncChangeElement = (formatType: FormatType) => {
+    elements.setLogTableElement(ccLog.getCcLogs())
     // configとストレージを更新
     console.log("changeElement")
     configData.formatType = formatType
@@ -33,6 +25,18 @@ export const run = async (): Promise<void> => {
     configData.formatType,
     callbackFuncChangeElement
   )
+
+  // log変更時のコールバック関数
+  const callbackFuncChangeCcLogs = (ccLogs: CcLogObjectInterface[]): void => {
+    console.log("mutate: ccLogs")
+    // テーブルのdomを更新する。
+    elements.setLogTableElement(ccLogs)
+  }
+  const ccLog = new CcLog(callbackFuncChangeCcLogs)
+  await ccLog.loadCcLogs()
+  ccLog.observeGoogleStorage()
+
+  elements.setLogTableElement(ccLog.getCcLogs())
 }
 
 window.addEventListener("load", run, false)

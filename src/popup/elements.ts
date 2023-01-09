@@ -1,12 +1,16 @@
 import { FormatType } from "@/core/config"
+import { CcLogObjectInterface } from "@/core/ccLog"
+import { groupByObject } from "@/core/utility"
 
 export interface ElementsType {
+  logTable: HTMLTableElement | null
   formatType: NodeListOf<HTMLInputElement> | null
 }
 
 export class Elements {
   private elemets: ElementsType = {
     formatType: null,
+    logTable: null,
   }
 
   private callbackFuncChange: (formatType: FormatType) => void
@@ -30,6 +34,10 @@ export class Elements {
     } else {
       this.elemets.formatType[1].checked = true
     }
+
+    this.elemets.logTable = <HTMLTableElement>(
+      document.getElementById("logTable")
+    )
 
     // 変更を検知してcallbackを実行
     this.elemets.formatType[0].addEventListener("change", (event) => {
@@ -78,5 +86,52 @@ export class Elements {
     } else {
       return this.elemets.formatType[1]
     }
+  }
+
+  getLogTableElement = (): HTMLTableElement | null => {
+    return this.elemets.logTable
+  }
+
+  setLogTableElement = (ccLogs: CcLogObjectInterface[]): void => {
+    document.getElementById("logTableData")?.remove()
+
+    const tbodyElement = document.createElement("tbody")
+    tbodyElement.id = "logTableData"
+    ccLogs.forEach((ccLog) => {
+      const trElement = document.createElement("tr")
+      trElement.className = "align-middle"
+      // 日付
+      const thRecoredAtElement = document.createElement("th")
+      thRecoredAtElement.textContent = ccLog.recordedStAt.toString()
+      trElement.appendChild(thRecoredAtElement)
+      // 参加者
+      const nameList = Object.keys(groupByObject(ccLog.speeches, (r) => r.name))
+      const tdNameElement = trElement.appendChild(document.createElement("td"))
+      nameList.forEach((name) => {
+        const spanElement = document.createElement("span")
+        spanElement.className = "badge bg-secondary"
+        spanElement.textContent = name
+        tdNameElement.appendChild(spanElement)
+      })
+      // 出力ボタン
+      const tdOutPutButtonElement = document.createElement("td")
+      const outputButtonElement = document.createElement("button")
+      outputButtonElement.textContent = "出力"
+      outputButtonElement.className = "btn btn-primary btn-sm"
+      tdOutPutButtonElement.appendChild(outputButtonElement)
+      trElement.appendChild(tdOutPutButtonElement)
+      // 削除ボタン
+      const tdDeleteButtonElement = document.createElement("td")
+      const deleteButtonElement = document.createElement("button")
+      deleteButtonElement.textContent = "削除"
+      deleteButtonElement.className = "btn btn-danger btn-sm"
+      tdDeleteButtonElement.appendChild(deleteButtonElement)
+      trElement.appendChild(tdDeleteButtonElement)
+
+      tbodyElement.appendChild(trElement)
+    })
+
+    const tableElement = this.getLogTableElement()
+    tableElement?.appendChild(tbodyElement)
   }
 }

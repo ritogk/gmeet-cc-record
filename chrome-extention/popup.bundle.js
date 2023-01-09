@@ -48,13 +48,10 @@ class CcLog {
             this.setCcLogs((_a = (await (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.getStorage)("ccLogs"))) !== null && _a !== void 0 ? _a : []);
         };
         this.observeGoogleStorage = () => {
-            (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.addListener)((message) => {
-                const data = JSON.parse(message);
-                const logs = this.logs;
-                if ("ccLogs" in data) {
-                    logs.ccLogs = data.ccLogs;
+            chrome.storage.onChanged.addListener((changes, namespace) => {
+                if ("ccLogs" in changes) {
+                    this.setCcLogs(changes.ccLogs.newValue);
                 }
-                this.setCcLogs(logs.ccLogs);
             });
         };
         this.callbackFuncChange = callbackFunc;
@@ -158,6 +155,30 @@ class Config {
 
 /***/ }),
 
+/***/ "./src/core/utility.ts":
+/*!*****************************!*\
+  !*** ./src/core/utility.ts ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "copyObject": () => (/* binding */ copyObject),
+/* harmony export */   "groupByObject": () => (/* binding */ groupByObject)
+/* harmony export */ });
+const copyObject = (object) => {
+    return JSON.parse(JSON.stringify(object));
+};
+const groupByObject = (array, getKey) => array.reduce((obj, cur, idx, src) => {
+    const key = getKey(cur, idx, src);
+    (obj[key] || (obj[key] = [])).push(cur);
+    return obj;
+}, {});
+
+
+
+/***/ }),
+
 /***/ "./src/popup/elements.ts":
 /*!*******************************!*\
   !*** ./src/popup/elements.ts ***!
@@ -169,11 +190,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "Elements": () => (/* binding */ Elements)
 /* harmony export */ });
 /* harmony import */ var _core_config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/core/config */ "./src/core/config.ts");
+/* harmony import */ var _core_utility__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/core/utility */ "./src/core/utility.ts");
+
 
 class Elements {
     constructor(formatType, callbackFuncChange) {
         this.elemets = {
             formatType: null,
+            logTable: null,
         };
         this.getElements = () => {
             return this.elemets;
@@ -201,6 +225,49 @@ class Elements {
                 return this.elemets.formatType[1];
             }
         };
+        this.getLogTableElement = () => {
+            return this.elemets.logTable;
+        };
+        this.setLogTableElement = (ccLogs) => {
+            var _a;
+            (_a = document.getElementById("logTableData")) === null || _a === void 0 ? void 0 : _a.remove();
+            const tbodyElement = document.createElement("tbody");
+            tbodyElement.id = "logTableData";
+            ccLogs.forEach((ccLog) => {
+                const trElement = document.createElement("tr");
+                trElement.className = "align-middle";
+                // 日付
+                const thRecoredAtElement = document.createElement("th");
+                thRecoredAtElement.textContent = ccLog.recordedStAt.toString();
+                trElement.appendChild(thRecoredAtElement);
+                // 参加者
+                const nameList = Object.keys((0,_core_utility__WEBPACK_IMPORTED_MODULE_1__.groupByObject)(ccLog.speeches, (r) => r.name));
+                const tdNameElement = trElement.appendChild(document.createElement("td"));
+                nameList.forEach((name) => {
+                    const spanElement = document.createElement("span");
+                    spanElement.className = "badge bg-secondary";
+                    spanElement.textContent = name;
+                    tdNameElement.appendChild(spanElement);
+                });
+                // 出力ボタン
+                const tdOutPutButtonElement = document.createElement("td");
+                const outputButtonElement = document.createElement("button");
+                outputButtonElement.textContent = "出力";
+                outputButtonElement.className = "btn btn-primary btn-sm";
+                tdOutPutButtonElement.appendChild(outputButtonElement);
+                trElement.appendChild(tdOutPutButtonElement);
+                // 削除ボタン
+                const tdDeleteButtonElement = document.createElement("td");
+                const deleteButtonElement = document.createElement("button");
+                deleteButtonElement.textContent = "削除";
+                deleteButtonElement.className = "btn btn-danger btn-sm";
+                tdDeleteButtonElement.appendChild(deleteButtonElement);
+                trElement.appendChild(tdDeleteButtonElement);
+                tbodyElement.appendChild(trElement);
+            });
+            const tableElement = this.getLogTableElement();
+            tableElement === null || tableElement === void 0 ? void 0 : tableElement.appendChild(tbodyElement);
+        };
         this.callbackFuncChange = callbackFuncChange;
         this.elemets.formatType = (document.getElementsByName("formatType"));
         this.elemets.formatType[0].value = _core_config__WEBPACK_IMPORTED_MODULE_0__.FormatType.TEXT;
@@ -212,6 +279,7 @@ class Elements {
         else {
             this.elemets.formatType[1].checked = true;
         }
+        this.elemets.logTable = (document.getElementById("logTable"));
         // 変更を検知してcallbackを実行
         this.elemets.formatType[0].addEventListener("change", (event) => {
             console.log("change formatTypeElements");
@@ -319,17 +387,9 @@ const run = async () => {
     await config.loadConfig();
     const configData = config.getConfig();
     console.log(`load config: ${JSON.stringify(configData)}`);
-    // log変更時のコールバック関数
-    const callbackFuncChangeCcLogs = (ccLogs) => {
-        console.log("mutate: ccLogs");
-        // テーブルのdomを更新する。
-        console.log(JSON.stringify(ccLogs));
-    };
-    const ccLog = new _core_ccLog__WEBPACK_IMPORTED_MODULE_0__.CcLog(callbackFuncChangeCcLogs);
-    await ccLog.loadCcLogs();
-    ccLog.observeGoogleStorage();
     // elementsの変更後のコールバック関数
     const callbackFuncChangeElement = (formatType) => {
+        elements.setLogTableElement(ccLog.getCcLogs());
         // configとストレージを更新
         console.log("changeElement");
         configData.formatType = formatType;
@@ -337,6 +397,16 @@ const run = async () => {
         (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_3__.sendContents)(configData);
     };
     const elements = new _popup_elements__WEBPACK_IMPORTED_MODULE_2__.Elements(configData.formatType, callbackFuncChangeElement);
+    // log変更時のコールバック関数
+    const callbackFuncChangeCcLogs = (ccLogs) => {
+        console.log("mutate: ccLogs");
+        // テーブルのdomを更新する。
+        elements.setLogTableElement(ccLogs);
+    };
+    const ccLog = new _core_ccLog__WEBPACK_IMPORTED_MODULE_0__.CcLog(callbackFuncChangeCcLogs);
+    await ccLog.loadCcLogs();
+    ccLog.observeGoogleStorage();
+    elements.setLogTableElement(ccLog.getCcLogs());
 };
 window.addEventListener("load", run, false);
 

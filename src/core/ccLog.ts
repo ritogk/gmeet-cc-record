@@ -66,13 +66,10 @@ export class CcLog implements CcLogInterface {
   }
 
   observeGoogleStorage = (): void => {
-    addListener((message: string) => {
-      const data = JSON.parse(message)
-      const logs = this.logs
-      if ("ccLogs" in data) {
-        logs.ccLogs = data.ccLogs
+    chrome.storage.onChanged.addListener((changes, namespace) => {
+      if ("ccLogs" in changes) {
+        this.setCcLogs(changes.ccLogs.newValue)
       }
-      this.setCcLogs(logs.ccLogs)
     })
   }
 }
