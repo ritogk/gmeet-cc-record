@@ -24224,11 +24224,16 @@ __webpack_require__.r(__webpack_exports__);
 const copyObject = (object) => {
     return JSON.parse(JSON.stringify(object));
 };
-const groupByObject = (array, getKey) => array.reduce((obj, cur, idx, src) => {
-    const key = getKey(cur, idx, src);
-    (obj[key] || (obj[key] = [])).push(cur);
-    return obj;
-}, {});
+const groupByObject = (array, getKey) => {
+    return array.reduce((obj, cur) => {
+        const key = getKey(cur);
+        if (!obj[key]) {
+            obj[key] = [];
+        }
+        obj[key].push(cur);
+        return obj;
+    }, {});
+};
 const downloadTextFile = (text, fileName) => {
     const blob = new Blob([text], { type: "text/plain" });
     const aTag = document.createElement("a");
