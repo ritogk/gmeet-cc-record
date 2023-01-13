@@ -24083,12 +24083,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _content_elements_switchingButtonElement__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/content/elements/switchingButtonElement */ "./src/content/elements/switchingButtonElement.ts");
 /* harmony import */ var _content_core_ccOveserver__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/content/core/ccOveserver */ "./src/content/core/ccOveserver.ts");
 /* harmony import */ var _core_ccLog__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/core/ccLog */ "./src/core/ccLog.ts");
-/* harmony import */ var _core_chromeStorage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/core/chromeStorage */ "./src/core/chromeStorage.ts");
-/* harmony import */ var diff_match_patch__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! diff-match-patch */ "./node_modules/diff-match-patch/index.js");
-/* harmony import */ var diff_match_patch__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(diff_match_patch__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _core_utility__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/core/utility */ "./src/core/utility.ts");
-/* harmony import */ var _core_time__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/core/time */ "./src/core/time.ts");
-
+/* harmony import */ var diff_match_patch__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! diff-match-patch */ "./node_modules/diff-match-patch/index.js");
+/* harmony import */ var diff_match_patch__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(diff_match_patch__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _core_utility__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/core/utility */ "./src/core/utility.ts");
+/* harmony import */ var _core_time__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/core/time */ "./src/core/time.ts");
 
 
 
@@ -24097,7 +24095,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const main = async () => {
     console.log("start: application");
-    const diffMatchPatch = new diff_match_patch__WEBPACK_IMPORTED_MODULE_4__.diff_match_patch();
+    const diffMatchPatch = new diff_match_patch__WEBPACK_IMPORTED_MODULE_3__.diff_match_patch();
     const callbackFuncChangeCcLogs = (ccLogs) => { };
     const ccLog = new _core_ccLog__WEBPACK_IMPORTED_MODULE_2__.CcLog(callbackFuncChangeCcLogs);
     ccLog.observeGoogleStorage();
@@ -24111,7 +24109,7 @@ const main = async () => {
     const log = {
         logRecorded: false,
         beforeSpeach: { name: "", speach: "", recordedAt: 0 },
-        ccLog: (0,_core_utility__WEBPACK_IMPORTED_MODULE_5__.copyObject)(defaultLog),
+        ccLog: (0,_core_utility__WEBPACK_IMPORTED_MODULE_4__.copyObject)(defaultLog),
     };
     /**
      * コントロールボタン押下後のコールバック関数
@@ -24123,28 +24121,18 @@ const main = async () => {
             ccOveserver.run();
             console.log("start: observer");
             log.logRecorded = true;
-            log.ccLog.recordedStAt = (0,_core_time__WEBPACK_IMPORTED_MODULE_6__.getMoment)().valueOf();
+            log.ccLog.recordedStAt = (0,_core_time__WEBPACK_IMPORTED_MODULE_5__.getMoment)().valueOf();
         }
         else {
             ccOveserver.stop();
             log.ccLog.speeches.push(log.beforeSpeach);
-            log.ccLog.recordedEdAt = (0,_core_time__WEBPACK_IMPORTED_MODULE_6__.getMoment)().valueOf();
+            log.ccLog.recordedEdAt = (0,_core_time__WEBPACK_IMPORTED_MODULE_5__.getMoment)().valueOf();
             log.ccLog.speeches = log.ccLog.speeches.slice(1);
             log.ccLog.id = ccLog.generateCcLogId();
-            const storage = await (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_3__.getStorage)("dataCcLogs");
-            if (storage === null) {
-                (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_3__.setStorage)("dataCcLogs", [log.ccLog]);
-            }
-            else {
-                log.ccLog.speeches = log.ccLog.speeches.sort((a, b) => {
-                    return a.recordedAt - b.recordedAt;
-                });
-                storage.push(log.ccLog);
-                (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_3__.setStorage)("dataCcLogs", storage);
-            }
+            ccLog.saveCcLog(log.ccLog);
             console.log(log.ccLog);
             log.logRecorded = false;
-            log.ccLog = (0,_core_utility__WEBPACK_IMPORTED_MODULE_5__.copyObject)(defaultLog);
+            log.ccLog = (0,_core_utility__WEBPACK_IMPORTED_MODULE_4__.copyObject)(defaultLog);
             log.beforeSpeach = { name: "", speach: "", recordedAt: 0 };
         }
     };
@@ -24184,14 +24172,14 @@ const main = async () => {
                 log.ccLog.speeches.push({
                     name: log.beforeSpeach.name,
                     speach: log.beforeSpeach.speach,
-                    recordedAt: (0,_core_time__WEBPACK_IMPORTED_MODULE_6__.getMoment)().valueOf(),
+                    recordedAt: (0,_core_time__WEBPACK_IMPORTED_MODULE_5__.getMoment)().valueOf(),
                 });
                 originalSpeach = speach;
             }
             log.beforeSpeach = {
                 name: name,
                 speach: originalSpeach,
-                recordedAt: (0,_core_time__WEBPACK_IMPORTED_MODULE_6__.getMoment)().valueOf(),
+                recordedAt: (0,_core_time__WEBPACK_IMPORTED_MODULE_5__.getMoment)().valueOf(),
             };
         }
     };
@@ -24248,9 +24236,6 @@ class CcLog {
             this.setCcLogs(ccLogs);
             (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.setStorage)("dataCcLogs", ccLogs);
         };
-        this.saveCcLogs = () => {
-            (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.setStorage)("dataCcLogs", this.logs.ccLogs);
-        };
         this.loadCcLogs = async () => {
             const ccLogs = await (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.getStorage)("dataCcLogs");
             if (!ccLogs) {
@@ -24268,6 +24253,19 @@ class CcLog {
                 return cclog;
             });
             this.setCcLogs(sortCcLogs);
+        };
+        this.saveCcLog = async (ccLog) => {
+            const dataCcLogs = await (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.getStorage)("dataCcLogs");
+            if (dataCcLogs === null) {
+                (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.setStorage)("dataCcLogs", [ccLog]);
+            }
+            else {
+                ccLog.speeches = ccLog.speeches.sort((a, b) => {
+                    return a.recordedAt - b.recordedAt;
+                });
+                dataCcLogs.push(ccLog);
+                (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.setStorage)("dataCcLogs", dataCcLogs);
+            }
         };
         this.observeGoogleStorage = () => {
             chrome.storage.onChanged.addListener((changes, namespace) => {

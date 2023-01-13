@@ -1,7 +1,6 @@
 import { SwitchingButtonElement } from "@/content/elements/switchingButtonElement"
 import { CcOveserver } from "@/content/core/ccOveserver"
 import { CcLog, CcLogObjectInterface } from "@/core/ccLog"
-import { setStorage, getStorage } from "@/core/chromeStorage"
 import { diff_match_patch } from "diff-match-patch"
 import { copyObject } from "@/core/utility"
 import { getMoment } from "@/core/time"
@@ -45,17 +44,7 @@ export const main = async (): Promise<void> => {
       log.ccLog.recordedEdAt = getMoment().valueOf()
       log.ccLog.speeches = log.ccLog.speeches.slice(1)
       log.ccLog.id = ccLog.generateCcLogId()
-      const storage = await getStorage<CcLogObjectInterface[]>("dataCcLogs")
-      if (storage === null) {
-        setStorage("dataCcLogs", [log.ccLog])
-      } else {
-        log.ccLog.speeches = log.ccLog.speeches.sort((a: any, b: any) => {
-          return a.recordedAt - b.recordedAt
-        })
-        storage.push(log.ccLog)
-        setStorage("dataCcLogs", storage)
-      }
-
+      ccLog.saveCcLog(log.ccLog)
       console.log(log.ccLog)
       log.logRecorded = false
       log.ccLog = copyObject(defaultLog)

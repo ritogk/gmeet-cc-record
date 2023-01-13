@@ -1,6 +1,7 @@
 import { getStorage, setStorage } from "@/core/chromeStorage"
 export interface CcLogInterface {
   loadCcLogs(): Promise<void>
+  saveCcLog(ccLogs: CcLogObjectInterface): void
   setCcLogs(ccLogs: CcLogObjectInterface[]): void
   getCcLogs(): CcLogObjectInterface[]
   getCcLog(date: number): CcLogObjectInterface | undefined
@@ -58,10 +59,6 @@ export class CcLog implements CcLogInterface {
     setStorage("dataCcLogs", ccLogs)
   }
 
-  saveCcLogs = (): void => {
-    setStorage("dataCcLogs", this.logs.ccLogs)
-  }
-
   loadCcLogs = async (): Promise<void> => {
     const ccLogs = await getStorage<CcLogObjectInterface[]>("dataCcLogs")
     if (!ccLogs) {
@@ -79,6 +76,19 @@ export class CcLog implements CcLogInterface {
       return cclog
     })
     this.setCcLogs(sortCcLogs)
+  }
+
+  saveCcLog = async (ccLog: CcLogObjectInterface): Promise<void> => {
+    const dataCcLogs = await getStorage<CcLogObjectInterface[]>("dataCcLogs")
+    if (dataCcLogs === null) {
+      setStorage("dataCcLogs", [ccLog])
+    } else {
+      ccLog.speeches = ccLog.speeches.sort((a: any, b: any) => {
+        return a.recordedAt - b.recordedAt
+      })
+      dataCcLogs.push(ccLog)
+      setStorage("dataCcLogs", dataCcLogs)
+    }
   }
 
   observeGoogleStorage = (): void => {

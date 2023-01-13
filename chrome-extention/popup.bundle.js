@@ -21631,9 +21631,6 @@ class CcLog {
             this.setCcLogs(ccLogs);
             (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.setStorage)("dataCcLogs", ccLogs);
         };
-        this.saveCcLogs = () => {
-            (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.setStorage)("dataCcLogs", this.logs.ccLogs);
-        };
         this.loadCcLogs = async () => {
             const ccLogs = await (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.getStorage)("dataCcLogs");
             if (!ccLogs) {
@@ -21651,6 +21648,19 @@ class CcLog {
                 return cclog;
             });
             this.setCcLogs(sortCcLogs);
+        };
+        this.saveCcLog = async (ccLog) => {
+            const dataCcLogs = await (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.getStorage)("dataCcLogs");
+            if (dataCcLogs === null) {
+                (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.setStorage)("dataCcLogs", [ccLog]);
+            }
+            else {
+                ccLog.speeches = ccLog.speeches.sort((a, b) => {
+                    return a.recordedAt - b.recordedAt;
+                });
+                dataCcLogs.push(ccLog);
+                (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.setStorage)("dataCcLogs", dataCcLogs);
+            }
         };
         this.observeGoogleStorage = () => {
             chrome.storage.onChanged.addListener((changes, namespace) => {
