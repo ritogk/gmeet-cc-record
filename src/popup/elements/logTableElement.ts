@@ -70,7 +70,7 @@ export class LogTableElement implements logTableElementInterface {
       outputButtonElement.addEventListener(
         "click",
         async (event: any): Promise<void> => {
-          const ccLogs = await getStorage<CcLogObjectInterface[]>("ccLogs")
+          const ccLogs = await getStorage<CcLogObjectInterface[]>("dataCcLogs")
           this.callbackFuncClickOutPut(
             ccLogs?.find((x) => x.id === Number(event.target.value))
           )
@@ -87,10 +87,10 @@ export class LogTableElement implements logTableElementInterface {
       deleteButtonElement.addEventListener(
         "click",
         async (event: any): Promise<void> => {
-          const ccLogs = await getStorage<CcLogObjectInterface[]>("ccLogs")
+          const ccLogs = await getStorage<CcLogObjectInterface[]>("dataCcLogs")
           if (ccLogs === null) return
           setStorage(
-            "ccLogs",
+            "dataCcLogs",
             ccLogs.filter((x) => {
               return x.id !== Number(event.target.value)
             })

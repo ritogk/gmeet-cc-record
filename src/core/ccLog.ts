@@ -55,15 +55,15 @@ export class CcLog implements CcLogInterface {
   deleteCcLog = (id: number): void => {
     const ccLogs = this.logs.ccLogs.filter((x) => x.id !== id)
     this.setCcLogs(ccLogs)
-    setStorage("ccLogs", ccLogs)
+    setStorage("dataCcLogs", ccLogs)
   }
 
   saveCcLogs = (): void => {
-    setStorage("ccLogs", this.logs.ccLogs)
+    setStorage("dataCcLogs", this.logs.ccLogs)
   }
 
   loadCcLogs = async (): Promise<void> => {
-    const ccLogs = await getStorage<CcLogObjectInterface[]>("ccLogs")
+    const ccLogs = await getStorage<CcLogObjectInterface[]>("dataCcLogs")
     if (!ccLogs) {
       this.setCcLogs([])
       return

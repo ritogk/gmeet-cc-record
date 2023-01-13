@@ -45,15 +45,15 @@ export const main = async (): Promise<void> => {
       log.ccLog.recordedEdAt = getMoment().valueOf()
       log.ccLog.speeches = log.ccLog.speeches.slice(1)
       log.ccLog.id = ccLog.generateCcLogId()
-      const storage = await getStorage<CcLogObjectInterface[]>("ccLogs")
+      const storage = await getStorage<CcLogObjectInterface[]>("dataCcLogs")
       if (storage === null) {
-        setStorage("ccLogs", [log.ccLog])
+        setStorage("dataCcLogs", [log.ccLog])
       } else {
         log.ccLog.speeches = log.ccLog.speeches.sort((a: any, b: any) => {
           return a.recordedAt - b.recordedAt
         })
         storage.push(log.ccLog)
-        setStorage("ccLogs", storage)
+        setStorage("dataCcLogs", storage)
       }
 
       console.log(log.ccLog)

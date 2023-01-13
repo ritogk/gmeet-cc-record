@@ -40,7 +40,7 @@ export class Config implements ConfigInterface {
 
   loadConfig = async (): Promise<void> => {
     this.config.formatType =
-      (await getStorage("formatType")) ?? this.config.formatType
+      (await getStorage("configFormatType")) ?? this.config.formatType
   }
 
   observeGoogleStorage = (): void => {

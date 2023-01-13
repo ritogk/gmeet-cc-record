@@ -25,7 +25,7 @@ export class FormatTypeElement implements formatTypeElementInterface {
       if (event.target instanceof HTMLInputElement) {
         if (!event.target.checked) return
         console.log(event.target.value)
-        setStorage("formatType", event.target.value)
+        setStorage("configFormatType", event.target.value)
       }
     })
     // 変更後にstorageに保存
@@ -34,7 +34,7 @@ export class FormatTypeElement implements formatTypeElementInterface {
       if (event.target instanceof HTMLInputElement) {
         if (!event.target.checked) return
         console.log(event.target.value)
-        setStorage("formatType", event.target.value)
+        setStorage("configFormatType", event.target.value)
       }
     })
   }

@@ -24107,13 +24107,13 @@ class CcLog {
         this.deleteCcLog = (id) => {
             const ccLogs = this.logs.ccLogs.filter((x) => x.id !== id);
             this.setCcLogs(ccLogs);
-            (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.setStorage)("ccLogs", ccLogs);
+            (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.setStorage)("dataCcLogs", ccLogs);
         };
         this.saveCcLogs = () => {
-            (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.setStorage)("ccLogs", this.logs.ccLogs);
+            (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.setStorage)("dataCcLogs", this.logs.ccLogs);
         };
         this.loadCcLogs = async () => {
-            const ccLogs = await (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.getStorage)("ccLogs");
+            const ccLogs = await (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.getStorage)("dataCcLogs");
             if (!ccLogs) {
                 this.setCcLogs([]);
                 return;
@@ -24390,16 +24390,16 @@ const main = async () => {
             log.ccLog.recordedEdAt = (0,_core_time__WEBPACK_IMPORTED_MODULE_6__.getMoment)().valueOf();
             log.ccLog.speeches = log.ccLog.speeches.slice(1);
             log.ccLog.id = ccLog.generateCcLogId();
-            const storage = await (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_3__.getStorage)("ccLogs");
+            const storage = await (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_3__.getStorage)("dataCcLogs");
             if (storage === null) {
-                (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_3__.setStorage)("ccLogs", [log.ccLog]);
+                (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_3__.setStorage)("dataCcLogs", [log.ccLog]);
             }
             else {
                 log.ccLog.speeches = log.ccLog.speeches.sort((a, b) => {
                     return a.recordedAt - b.recordedAt;
                 });
                 storage.push(log.ccLog);
-                (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_3__.setStorage)("ccLogs", storage);
+                (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_3__.setStorage)("dataCcLogs", storage);
             }
             console.log(log.ccLog);
             log.logRecorded = false;

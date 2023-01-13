@@ -21629,13 +21629,13 @@ class CcLog {
         this.deleteCcLog = (id) => {
             const ccLogs = this.logs.ccLogs.filter((x) => x.id !== id);
             this.setCcLogs(ccLogs);
-            (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.setStorage)("ccLogs", ccLogs);
+            (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.setStorage)("dataCcLogs", ccLogs);
         };
         this.saveCcLogs = () => {
-            (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.setStorage)("ccLogs", this.logs.ccLogs);
+            (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.setStorage)("dataCcLogs", this.logs.ccLogs);
         };
         this.loadCcLogs = async () => {
-            const ccLogs = await (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.getStorage)("ccLogs");
+            const ccLogs = await (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.getStorage)("dataCcLogs");
             if (!ccLogs) {
                 this.setCcLogs([]);
                 return;
@@ -21846,7 +21846,7 @@ class Config {
         this.loadConfig = async () => {
             var _a;
             this.config.formatType =
-                (_a = (await (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.getStorage)("formatType"))) !== null && _a !== void 0 ? _a : this.config.formatType;
+                (_a = (await (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.getStorage)("configFormatType"))) !== null && _a !== void 0 ? _a : this.config.formatType;
         };
         this.observeGoogleStorage = () => {
             chrome.storage.onChanged.addListener((changes, namespace) => {
@@ -21978,7 +21978,7 @@ class FormatTypeElement {
                 if (!event.target.checked)
                     return;
                 console.log(event.target.value);
-                (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_1__.setStorage)("formatType", event.target.value);
+                (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_1__.setStorage)("configFormatType", event.target.value);
             }
         });
         // 変更後にstorageに保存
@@ -21988,7 +21988,7 @@ class FormatTypeElement {
                 if (!event.target.checked)
                     return;
                 console.log(event.target.value);
-                (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_1__.setStorage)("formatType", event.target.value);
+                (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_1__.setStorage)("configFormatType", event.target.value);
             }
         });
     }
@@ -22053,7 +22053,7 @@ class LogTableElement {
                 outputButtonElement.className = "btn btn-primary btn-sm";
                 outputButtonElement.value = ccLog.id.toString();
                 outputButtonElement.addEventListener("click", async (event) => {
-                    const ccLogs = await (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.getStorage)("ccLogs");
+                    const ccLogs = await (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.getStorage)("dataCcLogs");
                     this.callbackFuncClickOutPut(ccLogs === null || ccLogs === void 0 ? void 0 : ccLogs.find((x) => x.id === Number(event.target.value)));
                 });
                 tdOutPutButtonElement.appendChild(outputButtonElement);
@@ -22065,10 +22065,10 @@ class LogTableElement {
                 deleteButtonElement.className = "btn btn-danger btn-sm";
                 deleteButtonElement.value = ccLog.id.toString();
                 deleteButtonElement.addEventListener("click", async (event) => {
-                    const ccLogs = await (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.getStorage)("ccLogs");
+                    const ccLogs = await (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.getStorage)("dataCcLogs");
                     if (ccLogs === null)
                         return;
-                    (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.setStorage)("ccLogs", ccLogs.filter((x) => {
+                    (0,_core_chromeStorage__WEBPACK_IMPORTED_MODULE_0__.setStorage)("dataCcLogs", ccLogs.filter((x) => {
                         return x.id !== Number(event.target.value);
                     }));
                 });
