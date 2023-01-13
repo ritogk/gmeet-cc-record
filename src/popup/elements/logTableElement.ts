@@ -109,8 +109,8 @@ export class LogTableElement implements logTableElementInterface {
 
   private observeGoogleStorage = (): void => {
     chrome.storage.onChanged.addListener((changes, namespace) => {
-      if ("ccLogs" in changes) {
-        this.setTbodyElementValue(changes.ccLogs.newValue)
+      if ("dataCcLogs" in changes) {
+        this.setTbodyElementValue(changes.dataCcLogs.newValue)
       }
     })
   }

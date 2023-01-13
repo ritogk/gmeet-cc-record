@@ -21664,8 +21664,8 @@ class CcLog {
         };
         this.observeGoogleStorage = () => {
             chrome.storage.onChanged.addListener((changes, namespace) => {
-                if ("ccLogs" in changes) {
-                    this.setCcLogs(changes.ccLogs.newValue);
+                if ("dataCcLogs" in changes) {
+                    this.setCcLogs(changes.dataCcLogs.newValue);
                 }
             });
         };
@@ -21860,8 +21860,8 @@ class Config {
         };
         this.observeGoogleStorage = () => {
             chrome.storage.onChanged.addListener((changes, namespace) => {
-                if ("ccLogs" in changes) {
-                    this.setConfig(changes.cclog.newValue);
+                if ("configFormatType" in changes) {
+                    this.setConfig(changes.configFormatType.newValue);
                 }
             });
         };
@@ -22091,8 +22091,8 @@ class LogTableElement {
         };
         this.observeGoogleStorage = () => {
             chrome.storage.onChanged.addListener((changes, namespace) => {
-                if ("ccLogs" in changes) {
-                    this.setTbodyElementValue(changes.ccLogs.newValue);
+                if ("dataCcLogs" in changes) {
+                    this.setTbodyElementValue(changes.dataCcLogs.newValue);
                 }
             });
         };

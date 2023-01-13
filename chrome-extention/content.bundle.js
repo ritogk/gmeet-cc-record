@@ -24108,7 +24108,7 @@ const main = async () => {
     };
     const log = {
         logRecorded: false,
-        beforeSpeach: { name: "", speach: "", recordedAt: 0 },
+        beforeSpeeches: [],
         ccLog: (0,_core_utility__WEBPACK_IMPORTED_MODULE_4__.copyObject)(defaultLog),
     };
     /**
@@ -24125,15 +24125,17 @@ const main = async () => {
         }
         else {
             ccOveserver.stop();
-            log.ccLog.speeches.push(log.beforeSpeach);
+            const beforeSpeaches = log.beforeSpeeches.sort((a, b) => {
+                return a.recordedAt - b.recordedAt;
+            });
+            log.ccLog.speeches.push(...beforeSpeaches);
             log.ccLog.recordedEdAt = (0,_core_time__WEBPACK_IMPORTED_MODULE_5__.getMoment)().valueOf();
-            log.ccLog.speeches = log.ccLog.speeches.slice(1);
             log.ccLog.id = ccLog.generateCcLogId();
             ccLog.saveCcLog(log.ccLog);
             console.log(log.ccLog);
             log.logRecorded = false;
             log.ccLog = (0,_core_utility__WEBPACK_IMPORTED_MODULE_4__.copyObject)(defaultLog);
-            log.beforeSpeach = { name: "", speach: "", recordedAt: 0 };
+            log.beforeSpeeches = [];
         }
     };
     const controlButtonElement = new _content_elements_switchingButtonElement__WEBPACK_IMPORTED_MODULE_0__.SwitchingButtonElement(callbackFuncClick);
@@ -24147,40 +24149,94 @@ const main = async () => {
     const callbackFuncObserver = (name, imagePath, speach) => {
         if (speach.trim() === "")
             return;
-        console.log("mutate: cc");
-        console.log(`name: ${name}`);
-        console.log(`imagePath: ${imagePath}`);
-        console.log(`speach: ${speach}`);
+        // console.log("mutate: cc")
+        // console.log(`name: ${name}`)
+        // console.log(`imagePath: ${imagePath}`)
+        // console.log(`speach: ${speach}`)
         if (log.logRecorded) {
             let originalSpeach;
-            if (log.beforeSpeach.name === name) {
+            const beforeSpeaches = log.beforeSpeeches.sort((a, b) => {
+                return a.recordedAt - b.recordedAt;
+            });
+            const beforeSpeach = beforeSpeaches.length !== 0 ? beforeSpeaches[0] : undefined;
+            if (!beforeSpeach) {
+                log.beforeSpeeches.push({
+                    name: name,
+                    speach: speach,
+                    recordedAt: (0,_core_time__WEBPACK_IMPORTED_MODULE_5__.getMoment)().valueOf(),
+                });
+                return;
+            }
+            if (beforeSpeach.name === name) {
+                // 記号を消す
+                speach = speach
+                    .replace("？", "")
+                    .replace("。", "")
+                    .replace(" ", "")
+                    .replace("　", "");
                 // 直前の字幕との差分を作成する
-                let diffs = diffMatchPatch.diff_main(log.beforeSpeach.speach, speach);
-                // diffを人間が読みやすいように整形する
-                diffMatchPatch.diff_cleanupSemantic(diffs);
-                // 空白文字だけの奴を削除
+                let diffs = diffMatchPatch.diff_main(beforeSpeach.speach, speach);
+                // // diffを人間が読みやすいように整形する
+                // diffMatchPatch.diff_cleanupSemantic(diffs)
+                // 空白文字のdiffを削除
                 diffs = diffs.filter((x) => {
                     return x[1].trim().length > 0;
                 });
+                // 「。」、「？」のdiffを削除
+                diffs = diffs.filter((x) => {
+                    return x[1] !== "。" && x[1] !== "？";
+                });
+                // 「？」と「。」と「 」と「　」を削る
+                diffs = diffs.map((x) => {
+                    x[1] = x[1].replace("？", "");
+                    x[1] = x[1].replace("。", "");
+                    x[1] = x[1].replace(" ", "");
+                    x[1] = x[1].replace("　", "");
+                    return x;
+                });
+                // diffs = diffs.filter((x) => {
+                //   return x[0] !== -1
+                // })
+                console.log(diffs);
                 // 差分を結合した文字列を作成する
                 originalSpeach = diffs
                     .map((x) => x[1])
                     .reduce((acc, cur) => acc + cur.trim());
+                console.log("before: " + beforeSpeach.speach);
+                console.log("speach: " + speach);
+                console.log(originalSpeach);
+                // 直近のログを置き換える
+                log.beforeSpeeches = [
+                    ...log.beforeSpeeches.filter((x) => {
+                        x.name !== name;
+                    }),
+                ];
+                log.beforeSpeeches.push({
+                    name: name,
+                    speach: originalSpeach,
+                    recordedAt: (0,_core_time__WEBPACK_IMPORTED_MODULE_5__.getMoment)().valueOf(),
+                });
             }
             else {
                 // 会話している人間が変わったタイミングでログにいれる。
-                log.ccLog.speeches.push({
-                    name: log.beforeSpeach.name,
-                    speach: log.beforeSpeach.speach,
+                if (beforeSpeach) {
+                    log.ccLog.speeches.push({
+                        name: beforeSpeach.name,
+                        speach: beforeSpeach.speach,
+                        recordedAt: (0,_core_time__WEBPACK_IMPORTED_MODULE_5__.getMoment)().valueOf(),
+                    });
+                    log.beforeSpeeches = [
+                        ...log.beforeSpeeches.filter((x) => {
+                            x.name !== name;
+                        }),
+                    ];
+                }
+                log.beforeSpeeches.push({
+                    name: name,
+                    speach: speach,
                     recordedAt: (0,_core_time__WEBPACK_IMPORTED_MODULE_5__.getMoment)().valueOf(),
                 });
-                originalSpeach = speach;
             }
-            log.beforeSpeach = {
-                name: name,
-                speach: originalSpeach,
-                recordedAt: (0,_core_time__WEBPACK_IMPORTED_MODULE_5__.getMoment)().valueOf(),
-            };
         }
     };
     const ccOveserver = new _content_core_ccOveserver__WEBPACK_IMPORTED_MODULE_1__.CcOveserver(callbackFuncObserver);
@@ -24268,8 +24324,8 @@ class CcLog {
         };
         this.observeGoogleStorage = () => {
             chrome.storage.onChanged.addListener((changes, namespace) => {
-                if ("ccLogs" in changes) {
-                    this.setCcLogs(changes.ccLogs.newValue);
+                if ("dataCcLogs" in changes) {
+                    this.setCcLogs(changes.dataCcLogs.newValue);
                 }
             });
         };

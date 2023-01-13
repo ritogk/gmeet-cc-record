@@ -45,8 +45,8 @@ export class Config implements ConfigInterface {
 
   observeGoogleStorage = (): void => {
     chrome.storage.onChanged.addListener((changes, namespace) => {
-      if ("ccLogs" in changes) {
-        this.setConfig(changes.cclog.newValue)
+      if ("configFormatType" in changes) {
+        this.setConfig(changes.configFormatType.newValue)
       }
     })
   }
