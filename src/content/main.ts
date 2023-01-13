@@ -106,13 +106,17 @@ export const main = async (): Promise<void> => {
     }
   }
   const ccOveserver = new CcOveserver(callbackFuncObserver)
+
+  // ↓ 呼び出しスクリプト
+  document.dispatchEvent(
+    new CustomEvent("runScript", { bubbles: true, detail: { name: "あなた" } })
+  )
+  // 動作確認用の入口
+  document.addEventListener("runScript", (e: any) => {
+    callbackFuncObserver(
+      e.detail.name,
+      "c:/a/b",
+      "あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほぱぴぷぺぽらりるれろ"
+    )
+  })
 }
-
-// 動作確認用の入口
-document.addEventListener("runScript", (e) => {
-  main()
-})
-
-// // // script呼び出し用イベント
-// const event = new Event("runScript", { bubbles: true })
-// document.dispatchEvent(event)

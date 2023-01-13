@@ -24453,14 +24453,13 @@ const main = async () => {
         }
     };
     const ccOveserver = new _content_core_ccOveserver__WEBPACK_IMPORTED_MODULE_1__.CcOveserver(callbackFuncObserver);
+    // ↓ 呼び出しスクリプト
+    document.dispatchEvent(new CustomEvent("runScript", { bubbles: true, detail: { name: "あなた" } }));
+    // 動作確認用の入口
+    document.addEventListener("runScript", (e) => {
+        callbackFuncObserver(e.detail.name, "c:/a/b", "あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほぱぴぷぺぽらりるれろ");
+    });
 };
-// 動作確認用の入口
-document.addEventListener("runScript", (e) => {
-    main();
-});
-// // // script呼び出し用イベント
-// const event = new Event("runScript", { bubbles: true })
-// document.dispatchEvent(event)
 
 })();
 
